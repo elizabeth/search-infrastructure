@@ -15,7 +15,7 @@ include_once "Player.php";
 	        // set the PDO error mode to exception
 	        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-	        $stmt = $conn->prepare("SELECT * FROM `2015-2016` WHERE Name = :name");
+	        $stmt = $conn->prepare("SELECT * FROM `2015-2016` WHERE Name = :name LIMIT 1");
 	        $searchTerm = strtolower(filter_var($searchTerm, FILTER_SANITIZE_STRING));
 	        $stmt->bindParam(':name', $searchTerm);
 	        $stmt->execute();
@@ -27,11 +27,10 @@ include_once "Player.php";
 	                'blk', 'pf', 'ppg'));
 	        $results = $stmt->fetchAll();
 
-	        echo json_encode($results);
+	        echo $_GET['callback'] . '('.json_encode($results).')';
 
 	        $stmt->closeCursor();
 	        $conn = null;
-
 	    } catch (PDOException $e) {
 	        echo "error retrieving nba player stats";
 	    }
