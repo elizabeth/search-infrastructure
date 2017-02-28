@@ -16,7 +16,7 @@ include_once "Player.php";
 
         $stmt = self::$conn->prepare("SELECT * FROM `2015-2016` WHERE Name=:name");
         $name = strtolower(filter_var($searchTerm, FILTER_SANITIZE_STRING));
-        $stmt->bindParam(':name', $searchTerm);
+        $stmt->bindParam(':name', $name);
         $stmt->execute();
         $stmt->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE,
             'Player',
