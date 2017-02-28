@@ -1,5 +1,5 @@
 <?php
-include_once "../dbinfo.inc";
+include_once "../../dbinfo.inc";
 include_once "Player.php";
 
     $DB_SERVER = DB_SERVER;
