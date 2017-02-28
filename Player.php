@@ -1,7 +1,6 @@
 <?php
 //NBA Player object
-class Player
-{
+class Player implements JsonSerializable {
     private $name;
     private $team;
     private $gp;            //games played
@@ -51,49 +50,75 @@ class Player
         $this->misc_ppg = $ppg;
     }
 
-    public function getName() { return $this->name; }
+    public function jsonSerialize() {
+        return [
+            'name': $this->name,
+            'team': $this->team,
+            'gp': $this->gp,
+            'min': $this->min,
+            'fg_m': $this->fg_m,
+            'fg_a': $this->fg_a,
+            'fg_pct': $this->fg_pct,
+            'three_pt_m': $this->three_pt_m,
+            'three_pt_a': $this->three_pt_a,
+            'three_pt_pct': $this->three_pt_pct,
+            'ft_m': $this->ft_m,
+            'ft_a': $this->ft_a,
+            'ft_pct': $this->ft_pct,
+            'reb_off': $this->reb_off,
+            'reb_def': $this->reb_def,
+            'reb_tot': $this->reb_tot,
+            'misc_to': $this->to,
+            'misc_stl': $this->misc_stl,
+            'misc_blk': $this->misc_blk,
+            'misc_pf': $this->misc_pf,
+            'misc_ppg': $this->misc_ppg
+        ];
+    }
 
-    public function getTeam() { return $this->team; }
+    // public function getName() { return $this->name; }
 
-    public function getGp() { return $this->gp; }
+    // public function getTeam() { return $this->team; }
 
-    public function getMin() { return $this->format($this->min); }
+    // public function getGp() { return $this->gp; }
 
-    public function getFgM() { return $this->format($this->fg_m); }
+    // public function getMin() { return $this->format($this->min); }
 
-    public function getFgA() { return $this->format($this->fg_a); }
+    // public function getFgM() { return $this->format($this->fg_m); }
 
-    public function getFgPct() { return $this->format($this->fg_pct); }
+    // public function getFgA() { return $this->format($this->fg_a); }
 
-    public function getThreePtM() { return $this->format($this->three_pt_m); }
+    // public function getFgPct() { return $this->format($this->fg_pct); }
 
-    public function getThreePtA() { return $this->format($this->three_pt_a); }
+    // public function getThreePtM() { return $this->format($this->three_pt_m); }
 
-    public function getThreePtPct() { return $this->format($this->three_pt_pct); }
+    // public function getThreePtA() { return $this->format($this->three_pt_a); }
 
-    public function getFtM() { return $this->format($this->ft_m); }
+    // public function getThreePtPct() { return $this->format($this->three_pt_pct); }
 
-    public function getFtA() { return $this->format($this->ft_a); }
+    // public function getFtM() { return $this->format($this->ft_m); }
 
-    public function getFtPct() { return $this->format($this->ft_pct); }
+    // public function getFtA() { return $this->format($this->ft_a); }
 
-    public function getRebOff() { return $this->format($this->reb_off); }
+    // public function getFtPct() { return $this->format($this->ft_pct); }
 
-    public function getRebDef() { return $this->format($this->reb_def); }
+    // public function getRebOff() { return $this->format($this->reb_off); }
 
-    public function getRebTot() { return $this->reb_tot; }
+    // public function getRebDef() { return $this->format($this->reb_def); }
 
-    public function getAst() { return $this->format($this->misc_ast); }
+    // public function getRebTot() { return $this->reb_tot; }
 
-    public function getTo() { return $this->format($this->misc_to); }
+    // public function getAst() { return $this->format($this->misc_ast); }
 
-    public function getStl() { return $this->format($this->misc_stl); }
+    // public function getTo() { return $this->format($this->misc_to); }
 
-    public function getBlk() { return $this->format($this->misc_blk); }
+    // public function getStl() { return $this->format($this->misc_stl); }
 
-    public function getPf() { return $this->format($this->misc_pf); }
+    // public function getBlk() { return $this->format($this->misc_blk); }
 
-    public function getPpg() { return $this->format($this->misc_ppg); }
+    // public function getPf() { return $this->format($this->misc_pf); }
+
+    // public function getPpg() { return $this->format($this->misc_ppg); }
     
     private function format($data) {
         return isset($data) ? number_format($data, 1) : 'N/A';

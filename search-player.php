@@ -11,13 +11,13 @@ include_once "Player.php";
 
 	if (isset($searchTerm)) {
 		try {
-	        $conn = new PDO("mysql:host=" . $this->DB_SERVER . ";dbname=" . $this->DB_NAME, $this->DB_USER, $this->DB_PASS);
+	        $conn = new PDO("mysql:host=" . $DB_SERVER . ";dbname=" . $DB_NAME, $DB_USER, $DB_PASS);
 	        // set the PDO error mode to exception
 	        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-	        $stmt = self::$conn->prepare("SELECT * FROM `2015-2016` WHERE Name=:name");
-	        $name = strtolower(filter_var($searchTerm, FILTER_SANITIZE_STRING));
-	        $stmt->bindParam(':name', $name);
+	        $stmt = $conn->prepare("SELECT * FROM `2015-2016` WHERE Name = :name");
+	        $searchTerm = strtolower(filter_var($searchTerm, FILTER_SANITIZE_STRING));
+	        $stmt->bindParam(':name', $searchTerm);
 	        $stmt->execute();
 	        $stmt->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE,
 	            'Player',
