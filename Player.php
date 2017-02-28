@@ -52,27 +52,27 @@ class Player implements JsonSerializable {
 
     public function jsonSerialize() {
         return [
-            'name': $this->name,
-            'team': $this->team,
-            'gp': $this->gp,
-            'min': $this->min,
-            'fg_m': $this->fg_m,
-            'fg_a': $this->fg_a,
-            'fg_pct': $this->fg_pct,
-            'three_pt_m': $this->three_pt_m,
-            'three_pt_a': $this->three_pt_a,
-            'three_pt_pct': $this->three_pt_pct,
-            'ft_m': $this->ft_m,
-            'ft_a': $this->ft_a,
-            'ft_pct': $this->ft_pct,
-            'reb_off': $this->reb_off,
-            'reb_def': $this->reb_def,
-            'reb_tot': $this->reb_tot,
-            'misc_to': $this->to,
-            'misc_stl': $this->misc_stl,
-            'misc_blk': $this->misc_blk,
-            'misc_pf': $this->misc_pf,
-            'misc_ppg': $this->misc_ppg
+            'name' => $this->name,
+            'team' => $this->team,
+            'gp' => $this->gp,
+            'min' => $this->min,
+            'fg_m' => $this->fg_m,
+            'fg_a' => $this->fg_a,
+            'fg_pct' => $this->fg_pct,
+            'three_pt_m' => $this->three_pt_m,
+            'three_pt_a' => $this->three_pt_a,
+            'three_pt_pct' => $this->three_pt_pct,
+            'ft_m' => $this->ft_m,
+            'ft_a' => $this->ft_a,
+            'ft_pct' => $this->ft_pct,
+            'reb_off' => $this->reb_off,
+            'reb_def' => $this->reb_def,
+            'reb_tot' => $this->reb_tot,
+            'misc_to' => $this->to,
+            'misc_stl' => $this->misc_stl,
+            'misc_blk' => $this->misc_blk,
+            'misc_pf' => $this->misc_pf,
+            'misc_ppg' => $this->misc_ppg
         ];
     }
 
