@@ -36,6 +36,6 @@ include_once "Player.php";
 	        echo "error retrieving nba player stats";
 	    }
 	} else {
-		echo "no search term entered"
+		echo "no search term entered";
 	}
 ?>
