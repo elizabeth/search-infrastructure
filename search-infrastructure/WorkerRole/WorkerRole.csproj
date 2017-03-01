@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{CAC577D9-34DC-4279-B66F-6C146ADB4473}</ProjectGuid>
+    <ProjectGuid>{0A8C8715-60D8-4D05-AC3A-AB69BA89E7CC}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>crawler</RootNamespace>
-    <AssemblyName>crawler</AssemblyName>
+    <RootNamespace>WorkerRole</RootNamespace>
+    <AssemblyName>WorkerRole</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <RoleType>Worker</RoleType>

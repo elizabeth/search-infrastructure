@@ -10,7 +10,7 @@ using Microsoft.WindowsAzure.Diagnostics;
 using Microsoft.WindowsAzure.ServiceRuntime;
 using Microsoft.WindowsAzure.Storage;
 
-namespace crawler
+namespace WorkerRole
 {
     public class WorkerRole : RoleEntryPoint
     {
@@ -19,7 +19,7 @@ namespace crawler
 
         public override void Run()
         {
-            Trace.TraceInformation("crawler is running");
+            Trace.TraceInformation("WorkerRole is running");
 
             try
             {
@@ -41,21 +41,21 @@ namespace crawler
 
             bool result = base.OnStart();
 
-            Trace.TraceInformation("crawler has been started");
+            Trace.TraceInformation("WorkerRole has been started");
 
             return result;
         }
 
         public override void OnStop()
         {
-            Trace.TraceInformation("crawler is stopping");
+            Trace.TraceInformation("WorkerRole is stopping");
 
             this.cancellationTokenSource.Cancel();
             this.runCompleteEvent.WaitOne();
 
             base.OnStop();
 
-            Trace.TraceInformation("crawler has stopped");
+            Trace.TraceInformation("WorkerRole has stopped");
         }
 
         private async Task RunAsync(CancellationToken cancellationToken)

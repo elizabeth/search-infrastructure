@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>2.9</ProductVersion>
-    <ProjectGuid>1f70dfa0-fda1-408f-a222-e40c0df26975</ProjectGuid>
+    <ProjectGuid>ea0e1ee7-9422-4713-9605-e9a677bc23a0</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>search_infrastructure</RootNamespace>
@@ -37,24 +37,26 @@
     <ServiceConfiguration Include="ServiceConfiguration.Cloud.cscfg" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\admin\WebRole.csproj">
+    <ProjectReference Include="..\WebRole\WebRole.csproj">
       <Name>WebRole</Name>
-      <Project>{446ceb74-28c9-4e15-b005-a5d4a586ec23}</Project>
+      <Project>{df0cf2e8-62b0-4e42-9e56-d848d13126a6}</Project>
       <Private>True</Private>
       <RoleType>Web</RoleType>
       <RoleName>WebRole</RoleName>
+      <UpdateDiagnosticsConnectionStringOnPublish>True</UpdateDiagnosticsConnectionStringOnPublish>
     </ProjectReference>
-    <ProjectReference Include="..\crawler\WorkerRole.csproj">
+    <ProjectReference Include="..\WorkerRole\WorkerRole.csproj">
       <Name>WorkerRole</Name>
-      <Project>{cac577d9-34dc-4279-b66f-6c146adb4473}</Project>
+      <Project>{0a8c8715-60d8-4d05-ac3a-ab69ba89e7cc}</Project>
       <Private>True</Private>
       <RoleType>Worker</RoleType>
       <RoleName>WorkerRole</RoleName>
+      <UpdateDiagnosticsConnectionStringOnPublish>True</UpdateDiagnosticsConnectionStringOnPublish>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="WebRoleContent" />
-    <Folder Include="WorkerRoleContent" />
+    <Folder Include="WebRoleContent\" />
+    <Folder Include="WorkerRoleContent\" />
   </ItemGroup>
   <ItemGroup>
     <DiagnosticsConfiguration Include="WebRoleContent\diagnostics.wadcfgx" />

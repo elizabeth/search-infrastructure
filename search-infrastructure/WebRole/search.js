@@ -1,12 +1,11 @@
 ﻿'use strict';
 
 $(document).ready(function () {
-    $("#search").submit(function (e) {
+    $("#search-form").submit(function (e) {
         e.preventDefault(e);
         $('#submit').blur();
-        $('#searchInput').blur();
+        $('#search').blur();
 
-        //$('#submit').blur();
         ////add loading icon
         //$('#players').html('<i id="spinner" class="fa fa-5x fa-fw fa-refresh fa-spin"></i>')
         //    .promise()
@@ -16,13 +15,13 @@ $(document).ready(function () {
         //    });
     });
 
-    $("#searchInput").keyup(function (e) {
+    $("#search").keyup(function (e) {
         //prevent ajax call from happening twice if on submit
         if (e.keyCode != 13) {
             //only make ajax call if user stops typing for short time
             delay(function () {
-                if ($("#input").val()) {
-                    searchPlayers($("#input").val());
+                if ($("#search").val()) {
+                    searchPlayers($("#search").val());
                 } else {
                     //$("#results").remove();
                 }
