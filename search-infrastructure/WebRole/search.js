@@ -35,7 +35,7 @@ $(document).ready(function () {
         $.ajax({
             crossDomain: true,
             contentType: 'application/json; charset-utf-8',
-            url: 'http://54.213.188.54/search-infrastructure/search-player.phh',
+            url: 'http://54.213.188.54/search-infrastructure/search-player.php',
             type: 'GET',
             data: { 'search': searchTerm },
             dataType: 'jsonp'
@@ -46,6 +46,16 @@ $(document).ready(function () {
                 //$("#players").html(data);
             }).fail(function (err) {
                 //$("#players").html("Error retrieving data. Please try again later.");
+                console.log(err);
             });
     }
+
+    //delay the keyup event for quickly typed characters
+    var delay = (function () {
+        var timer = 0;
+        return function (callback, ms) {
+            clearTimeout(timer);
+            timer = setTimeout(callback, ms);
+        };
+    })();
 });

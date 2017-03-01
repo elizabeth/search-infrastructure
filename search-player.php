@@ -32,9 +32,9 @@ include_once "Player.php";
 	        $stmt->closeCursor();
 	        $conn = null;
 	    } catch (PDOException $e) {
-	        echo "error retrieving nba player stats";
+	        echo $_GET['callback'] . '('.json_encode("error retrieving nba player stats").')';
 	    }
 	} else {
-		echo "no search term entered";
+		echo $_GET['callback'] . '('.json_encode("no search term entered").')';
 	}
 ?>
