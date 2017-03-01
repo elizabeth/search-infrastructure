@@ -33,7 +33,6 @@ namespace WebRole
             try
             {
                 CloudStorageAccount storageAccount = CloudStorageAccount.Parse(
-                //TODO get storage connection string
                 ConfigurationManager.AppSettings["StorageConnectionString"]);
                 CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
                 CloudBlobContainer container = blobClient.GetContainerReference("blob");

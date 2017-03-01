@@ -9,6 +9,7 @@ $(document).ready(function () {
         var search = $("#search").val();
         searchPlayers(search);
         searchCrawler(search);
+        saveSearch(search);
         ////add loading icon
         //$('#players').html('<i id="spinner" class="fa fa-5x fa-fw fa-refresh fa-spin"></i>')
         //    .promise()
@@ -40,7 +41,7 @@ $(document).ready(function () {
     function querySearch(searchTerm) {
         //send the AJAX call to the server
         $.ajax({
-            url: 'querySuggest.asmx/search',
+            url: 'querySuggest.asmx/searchTrie',
             type: 'POST',
             data: JSON.stringify({ term: searchTerm }),
             contentType: "application/json; charset=utf-8",
@@ -52,10 +53,11 @@ $(document).ready(function () {
                 try {
                     var results = JSON.parse(data.d);
 
+                    //TODO make clickable to search
                     //display the results
-                    $.each(results, function (index, obj) {
-                        var divResult = $('<div></div>').html(obj.Key);
-                        if (obj.Value > 0) {
+                    $.each(results, function (key, bool) {
+                        var divResult = $('<div></div>').html(key);
+                        if (bool) {
                             $(divResult).addClass('prev-search');
                         }
                         suggestions.append(divResult);
@@ -133,7 +135,19 @@ $(document).ready(function () {
 
     //AJAX request to search urls
     function searchCrawler(searchTerm) {
+        //search crawler
 
+    }
+
+    //save search term
+    function saveSearch(searchTerm) {
+        $.ajax({
+            url: '/getQuerySuggest.asmx/saveSearch',
+            type: 'POST',
+            data: JSON.stringify({ term: searchTerm }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json"
+        });
     }
 
     //delay the keyup event for quickly typed characters
