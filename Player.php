@@ -55,25 +55,25 @@ class Player implements JsonSerializable {
             'name' => $this->name,
             'team' => $this->team,
             'gp' => $this->gp,
-            'min' => $this->format(min),
-            'fg_m' => $this->format(fg_m),
-            'fg_a' => $this->format(fg_a),
-            'fg_pct' => $this->format(fg_pct),
-            'three_pt_m' => $this->format(three_pt_m),
-            'three_pt_a' => $this->format(three_pt_a),
-            'three_pt_pct' => $this->format(three_pt_pct),
-            'ft_m' => $this->format(ft_m),
-            'ft_a' => $this->format(ft_a),
-            'ft_pct' => $this->format(ft_pct),
-            'reb_off' => $this->format(reb_off),
-            'reb_def' => $this->format(reb_def),
+            'min' => $this->format($this->min),
+            'fg_m' => $this->format($this->fg_m),
+            'fg_a' => $this->format($this->fg_a),
+            'fg_pct' => $this->format($this->fg_pct),
+            'three_pt_m' => $this->format($this->three_pt_m),
+            'three_pt_a' => $this->format($this->three_pt_a),
+            'three_pt_pct' => $this->format($this->three_pt_pct),
+            'ft_m' => $this->format($this->ft_m),
+            'ft_a' => $this->format($this->ft_a),
+            'ft_pct' => $this->format($this->ft_pct),
+            'reb_off' => $this->format($this->reb_off),
+            'reb_def' => $this->format($this->reb_def),
             'reb_tot' => $this->reb_tot,
-            'misc_ast' => $this->format(misc_ast),
-            'misc_to' => $this->format(misc_to),
-            'misc_stl' => $this->format(misc_stl),
-            'misc_blk' => $this->format(misc_blk),
-            'misc_pf' => $this->format(misc_pf),
-            'misc_ppg' => $this->format(misc_ppg)
+            'misc_ast' => $this->format($this->misc_ast),
+            'misc_to' => $this->format($this->misc_to),
+            'misc_stl' => $this->format($this->misc_stl),
+            'misc_blk' => $this->format($this->misc_blk),
+            'misc_pf' => $this->format($this->misc_pf),
+            'misc_ppg' => $this->format($this->misc_ppg)
         ];
     }
 
@@ -122,6 +122,6 @@ class Player implements JsonSerializable {
     // public function getPpg() { return $this->format($this->misc_ppg); }
     
     private function format($data) {
-        return isset($data) ? number_format($data, 1) : 'N/A';
+        return isset($data) ? (string) number_format($data, 1) : 'N/A';
     }
 }

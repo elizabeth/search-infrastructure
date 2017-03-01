@@ -44,7 +44,7 @@ $(document).ready(function () {
             //The response from the server
             .done(function (data) {
                 var player = playerDiv();
-
+                console.log(data);
                 try {
                     if (data[0]) {
                         var stats = data[0];
