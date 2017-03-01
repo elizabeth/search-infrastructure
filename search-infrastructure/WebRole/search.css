@@ -1,3 +1,63 @@
-﻿h3 {
+﻿#searchForm {
+    width: 100%;
+}
+
+#search {
+    width: 100%;
+}
+
+#submitDiv {
+    position: relative;
+}
+
+#submit {
+    position: absolute;
+    bottom: 0;
+}
+
+.prev-search {
+
+}
+
+#suggestions {
+    border-right: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+    padding: 6px 12px;
+}
+
+ins {
+    margin-top: 100px;
+}
+
+h3 {
+    margin-top: 0;
     margin-bottom: 0;
+}
+
+table, th, td {
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 5px;
+    color: #ff4081;
+    border-bottom: 2px solid #ddd;
+    border-top: 1px solid #ddd;
+}
+
+th {
+    border-color: #55595c;
+}
+
+td {
+    background-color: #ff4081;
+    color: #fff;
+}
+
+hr {
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 5px;
+    border-top: 1px solid #eceeef;
 }

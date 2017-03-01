@@ -112,7 +112,9 @@
     <Content Include="admin.asmx" />
     <Content Include="dashboard.aspx" />
     <Content Include="dashboard.js" />
+    <Content Include="querySuggest.asmx" />
     <Content Include="search.aspx" />
+    <Content Include="search.css" />
     <Content Include="search.js" />
     <Content Include="Web.config" />
   </ItemGroup>
@@ -129,6 +131,10 @@
       <DependentUpon>dashboard.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="querySuggest.asmx.cs">
+      <DependentUpon>querySuggest.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="search.aspx.cs">
       <DependentUpon>search.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

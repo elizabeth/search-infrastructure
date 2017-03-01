@@ -13,17 +13,21 @@
     <script type="text/javascript" src="search.js"></script>
 </head>
 <body class="mdc-typography--body2">
-    <form id="searchForm" runat="server">
-    <div>
-        <div class="input-group">
-            <div class="mdc-textfield mdc-textfield--upgraded">
-                <input type="text" id="search" name="search" class="mdc-textfield__input" placeholder="search" autocomplete="off" required="required"/>
+    <div class="mdc-layout-grid">
+        <form id="searchForm" class="mdc-layout-grid__cell mdc-layout-grid__cell--span-12" runat="server">
+            <div class="mdc-layout-grid">
+                <div id="outer" class="mdc-textfield mdc-textfield--upgraded mdc-layout-grid__cell mdc-layout-grid__cell--span-10">
+                    <input type="text" id="search" name="search" class="mdc-textfield__input" placeholder="search" autocomplete="off" required="required"/>
+                </div>
+
+                <div id="submitDiv" class="mdc-layout-grid__cell mdc-layout-grid__cell--span-2">
+                    <button id="submit" class="mdc-button mdc-button--raised mdc-button--accent mdc-ripple-upgraded" type="submit">Search</button>
+                </div>
             </div>
-            <button id="submit" class="mdc-button mdc-button--raised mdc-button--accent mdc-ripple-upgraded" type="submit">Search</button>
-        </div>
+        </form>
     </div>
-        
-    </form>
+
+    <div id="searchResults"></div>
 
     <script async="async" src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     <!-- eliz -->
@@ -35,8 +39,5 @@
     <script>
     (adsbygoogle = window.adsbygoogle || []).push({});
     </script>
-
-    <div id="searchResults"></div>
-    <div id="results" class="mdc-layout-grid"></div>
 </body>
 </html>
