@@ -29,7 +29,7 @@ $(document).ready(function () {
                     $('#results').remove();
                     querySearch($("#search").val());
                 } else {
-                    $('#suggestions')
+                    $('#suggestions').remove();
                     $('#player').remove();
                     $('#results').remove();
                 }
@@ -53,10 +53,13 @@ $(document).ready(function () {
                 try {
                     var results = JSON.parse(data.d);
 
-                    //TODO make clickable to search
                     //display the results
                     $.each(results, function (key, bool) {
-                        var divResult = $('<div></div>').html(key);
+                        //set on click
+                        var divResult = $('<div>').text(key).on('click', function () {
+                            clickSuggestion(key);
+                        });
+
                         if (bool) {
                             $(divResult).addClass('prev-search');
                         }
@@ -150,6 +153,11 @@ $(document).ready(function () {
         });
     }
 
+    var clickSuggestion = (function(val) {
+        $('#search').val(val);
+        $('#suggestions').remove();
+    });
+
     //delay the keyup event for quickly typed characters
     var delay = (function () {
         var timer = 0;
@@ -164,7 +172,7 @@ $(document).ready(function () {
     var suggestDiv = function () {
         //create div to show results in if does not exist
         if ($('#suggestions').length == 0) {
-            $('#outer').append($('<div>', { id: 'suggestions'}));
+            $('#outer').append($('<div>', { id: 'suggestions', class: 'dropdown-content'}));
         }
         return $('#suggestions').html('');
     };

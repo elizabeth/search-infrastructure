@@ -16,10 +16,10 @@ namespace WebRole
     [System.Web.Script.Services.ScriptService]
     public class admin : System.Web.Services.WebService
     {
-        private static Dictionary<string, Tuple<List<string>, DateTime>> searchcache;
+        private static Dictionary<string, List<string>> searchcache;
 
         [WebMethod]
-        public string HelloWorld()
+        public string searchSites()
         {
             return "Hello World";
         }

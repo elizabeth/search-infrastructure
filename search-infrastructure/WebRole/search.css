@@ -15,7 +15,21 @@
     bottom: 0;
 }
 
-.prev-search {
+/* Links inside the dropdown */
+.dropdown-content div {
+    color: #000;
+    padding: 2px;
+    text-decoration: none;
+    display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content div:hover {
+    background-color: #f1f1f1;
+    cursor: pointer;
+}
+
+.dropdown-content .prev-search {
     color: #ff4081;
 }
 
