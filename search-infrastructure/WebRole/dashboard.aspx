@@ -18,6 +18,12 @@
     
     </div>
     </form>--%>
+    <div class="mdc-layout-grid">
+        <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-12">
+            <h3 class="mdc-typography--subheading3">Worker Status:</h3>
+            <div id="worker" class="mdc-typography--subheading1"></div>
+        </div>
+    </div>
 
 </body>
 </html>

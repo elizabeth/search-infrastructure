@@ -144,6 +144,16 @@
     </Compile>
     <Compile Include="WebRole.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Elizabot\Elizabot.csproj">
+      <Project>{1d543173-1e90-4e10-aa34-660ba0f00676}</Project>
+      <Name>Elizabot</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Trie\HybridTrie.csproj">
+      <Project>{7ffaa2d2-f572-4725-b877-110417439af4}</Project>
+      <Name>HybridTrie</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

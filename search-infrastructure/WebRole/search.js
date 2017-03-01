@@ -64,19 +64,6 @@ $(document).ready(function () {
                     suggestions.remove();
                     console.log('Error retrieving suggestions. ' + err);
                 }
-                //results.append($('<div></div>').html(JSON.parse(data.d)).addClass('search-error'));
-                //var suggestions = JSON.parse(data.d);
-                ////display the results
-                //$(suggestions).each(function (index, result) {
-                //    var divResult = $('<div></div>').html(result);
-                //    results.append(divResult);
-                //})
-
-                //if no suggestions, display message
-                //if (suggestions.length == 0) {
-                //    var divResult = $('<div></div>').html("No suggestions found.");
-                //    results.append(divResult);
-                //}
             }).fail(function (err) {
                 $('#suggestions').remove();
                 console.log('Error retrieving suggestions. ' + err);

@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkerRole", "WorkerRole\Wo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elizabot", "Elizabot\Elizabot.csproj", "{1D543173-1E90-4E10-AA34-660BA0F00676}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HybridTrie", "Trie\HybridTrie.csproj", "{7FFAA2D2-F572-4725-B877-110417439AF4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{1D543173-1E90-4E10-AA34-660BA0F00676}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1D543173-1E90-4E10-AA34-660BA0F00676}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1D543173-1E90-4E10-AA34-660BA0F00676}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7FFAA2D2-F572-4725-B877-110417439AF4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7FFAA2D2-F572-4725-B877-110417439AF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7FFAA2D2-F572-4725-B877-110417439AF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7FFAA2D2-F572-4725-B877-110417439AF4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
