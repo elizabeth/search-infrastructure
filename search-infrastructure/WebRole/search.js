@@ -140,7 +140,7 @@ $(document).ready(function () {
     function searchCrawler(searchTerm) {
         //send the AJAX call to the server to retrieve search results
         $.ajax({
-            url: 'admin.asmx/searchSites',
+            url: 'admin.asmx/searchPages',
             type: 'POST',
             data: JSON.stringify({ term: searchTerm }),
             contentType: 'application/json; charset=utf-8',

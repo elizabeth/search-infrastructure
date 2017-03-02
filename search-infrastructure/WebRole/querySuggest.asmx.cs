@@ -20,7 +20,6 @@ namespace WebRole
     [System.Web.Script.Services.ScriptService]
     public class querySuggest : System.Web.Services.WebService
     {
-
         private string path = Path.GetTempPath() + "\\wiki.txt";
         private int _maxMem = 20;
         private PerformanceCounter theMemCounter = new PerformanceCounter("Memory", "Available MBytes");

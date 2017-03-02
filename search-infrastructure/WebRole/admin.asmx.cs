@@ -1,7 +1,13 @@
-﻿using System;
+﻿using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Queue;
+using Microsoft.WindowsAzure.Storage.Table;
+using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Web;
+using System.Web.Script.Serialization;
+using System.Web.Script.Services;
 using System.Web.Services;
 
 namespace WebRole
@@ -16,12 +22,34 @@ namespace WebRole
     [System.Web.Script.Services.ScriptService]
     public class admin : System.Web.Services.WebService
     {
+        private static CloudStorageAccount storageAccount = CloudStorageAccount.Parse(ConfigurationManager.AppSettings["StorageConnectionString"]);
+        private static CloudQueueClient queueClient;
+        private static CloudQueue opQueue;
+        private static CloudQueue robotQueue;
+        private static CloudQueue urlQueue;
+        private static CloudTableClient tableClient;
+        private static CloudTable pagesTable;
+        private static CloudTable errorsTable;
+        private static CloudTable statsTable;
         private static Dictionary<string, List<string>> searchcache;
 
         [WebMethod]
-        public string searchSites(string term)
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string searchPages(string term)
         {
-            return "Hello World";
+            term = term.Trim().ToLower();
+
+            //search table and return relevant pages
+            try
+            {
+         
+                return new JavaScriptSerializer().Serialize("");
+            }
+            catch (Exception e)
+            {
+                return "Error retrieving results.";
+            }
+
         }
     }
 }
