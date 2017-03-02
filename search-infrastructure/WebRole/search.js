@@ -1,12 +1,12 @@
 ﻿'use strict';
 
 $(document).ready(function () {
-    $("#searchForm").submit(function (e) {
+    $('#searchForm').submit(function (e) {
         e.preventDefault(e);
         $('#submit').blur();
         $('#search').blur();
 
-        var search = $("#search").val();
+        var search = $('#search').val();
         searchPlayers(search);
         searchCrawler(search);
         saveSearch(search);
@@ -19,7 +19,7 @@ $(document).ready(function () {
         //    });
     });
 
-    $("#search").keyup(function (e) {
+    $('#search').keyup(function (e) {
         //prevent ajax call from happening twice if on submit
         if (e.keyCode != 13) {
             //only make ajax call if user stops typing for short time
@@ -44,8 +44,8 @@ $(document).ready(function () {
             url: 'querySuggest.asmx/searchTrie',
             type: 'POST',
             data: JSON.stringify({ term: searchTerm }),
-            contentType: "application/json; charset=utf-8",
-            dataType: "json"
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json'
         })
             //the response from the server
             .done(function (data) {
@@ -138,19 +138,51 @@ $(document).ready(function () {
 
     //AJAX request to search urls
     function searchCrawler(searchTerm) {
-        //search crawler
+        //send the AJAX call to the server to retrieve search results
+        $.ajax({
+            url: 'admin.asmx/searchSites',
+            type: 'POST',
+            data: JSON.stringify({ term: searchTerm }),
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json'
+        })
+            //the response from the server
+            .done(function (data) {
+                var searchResults = resultsDiv();
+                try {
+                    var results = JSON.parse(data.d);
 
+                    if (results.length == 0) {
+                        searchResults.html('No results found');
+                    } else {
+                        //display the results
+                        $.each(results, function (index, obj) {
+                            console.log(obj);
+                            var result = $('<div>').text(obj);
+                        });
+                    }
+                } catch (err) {
+                    results.text('Error retrieving search results.');
+                    console.log('Error retrieving search results. ' + err);
+                }
+            }).fail(function (err) {
+                results.text('Error retrieving search results.');
+                console.log('Error retrieving search results. ' + err);
+            });
     }
 
-    //save search term
+    //AJAX request to save search term to Trie
     function saveSearch(searchTerm) {
         $.ajax({
             url: '/getQuerySuggest.asmx/saveSearch',
             type: 'POST',
             data: JSON.stringify({ term: searchTerm }),
-            contentType: "application/json; charset=utf-8",
-            dataType: "json"
-        });
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json'
+        })
+            .fail(function (err) {
+                console.log('Error saving user search. ' + err);
+            });
     }
 
     var clickSuggestion = (function(val) {
@@ -174,7 +206,7 @@ $(document).ready(function () {
         if ($('#suggestions').length == 0) {
             $('#outer').append($('<div>', { id: 'suggestions', class: 'dropdown-content'}));
         }
-        return $('#suggestions').html('');
+        return $('#suggestions').text('');
     };
 
     //check if player div exists, create if not
@@ -184,7 +216,7 @@ $(document).ready(function () {
         if ($('#player').length == 0) {
             $('#searchResults').append($('<div>', { id: 'player', class: 'mdc-layout-grid' }));
         }
-        return $('#player').html('');
+        return $('#player').text('');
     };
 
     //check if results div exists, create if not
@@ -194,7 +226,7 @@ $(document).ready(function () {
         if ($('#results').length == 0) {
             $('#searchResults').append($('<div>', { id: 'results', class: 'mdc-layout-grid' }));
         }
-        return $('#results').html('');
+        return $('#results').text('');
     };
 
     //for button ripple click styling

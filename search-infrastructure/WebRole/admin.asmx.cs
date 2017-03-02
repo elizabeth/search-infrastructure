@@ -19,7 +19,7 @@ namespace WebRole
         private static Dictionary<string, List<string>> searchcache;
 
         [WebMethod]
-        public string searchSites()
+        public string searchSites(string term)
         {
             return "Hello World";
         }
