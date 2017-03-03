@@ -211,6 +211,8 @@ namespace WebRole
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
         public string getTrieStats()
         {
+            statsTable = setTable(Operation._STATS_TABLE);
+
             try
             {
                 TableQuery<StatEntity> statQuery = new TableQuery<StatEntity>()

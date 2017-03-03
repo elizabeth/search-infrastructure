@@ -72,7 +72,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ErrorEntity.cs" />
     <Compile Include="Operation.cs" />
+    <Compile Include="PageEntity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StatEntity.cs" />
   </ItemGroup>
