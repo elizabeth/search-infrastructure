@@ -1,4 +1,5 @@
-﻿using Microsoft.WindowsAzure.Storage;
+﻿using Elizabot;
+using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Queue;
 using Microsoft.WindowsAzure.Storage.Table;
 using System;
@@ -22,27 +23,77 @@ namespace WebRole
     [System.Web.Script.Services.ScriptService]
     public class admin : System.Web.Services.WebService
     {
-        private static CloudStorageAccount storageAccount = CloudStorageAccount.Parse(ConfigurationManager.AppSettings["StorageConnectionString"]);
-        private static CloudQueueClient queueClient;
-        private static CloudQueue opQueue;
-        private static CloudQueue robotQueue;
-        private static CloudQueue urlQueue;
-        private static CloudTableClient tableClient;
-        private static CloudTable pagesTable;
-        private static CloudTable errorsTable;
-        private static CloudTable statsTable;
-        private static Dictionary<string, List<string>> searchcache;
+        private CloudQueueClient queueClient;
+        private CloudQueue opQueue;
+        private CloudQueue robotQueue;
+        private CloudQueue urlQueue;
+        private CloudTableClient tableClient;
+        private CloudTable pagesTable;
+        private CloudTable errorsTable;
+        private CloudTable statsTable;
+        private static Dictionary<string, List<string>> searchCache;
+        private CloudStorageAccount storageAccount = CloudStorageAccount.Parse(ConfigurationManager.AppSettings["StorageConnectionString"]);
+
+        //start crawling given root url
+        [WebMethod]
+        public string startCrawling(string url)
+        {
+            //parse input
+            url = url.Trim().ToLower();
+
+            opQueue = setQueue(Operation._OP_QUEUE);
+            robotQueue = setQueue(Operation._ROBOTS_QUEUE);
+
+            //check given url valid and is within allowed domains
+            try
+            {
+                if (!url.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+                {
+                    url = "http://" + url;
+                }
+
+                Uri uri = new Uri(url, UriKind.Absolute);
+                string uriString = uri.AbsoluteUri;
+
+                if (Operation.domains.Values.Any(uri.Host.Contains))
+                {
+                    CloudQueueMessage opMessage = new CloudQueueMessage(Operation._START);
+                    opQueue.AddMessage(opMessage);
+
+                    //add url
+                    CloudQueueMessage robotMessage = new CloudQueueMessage(uriString);
+                    robotQueue.AddMessage(robotMessage);
+
+                    return "Started crawling " + uriString;
+                }
+                else
+                {
+                    return "Url is not in the allowed domain";
+                }
+            }
+            catch (Exception e)
+            {
+                return "Please enter a valid url";
+            }
+        }
 
         [WebMethod]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
         public string searchPages(string term)
         {
             term = term.Trim().ToLower();
+            pagesTable = setTable(Operation._PAGES_TABLE);
 
-            //search table and return relevant pages
+            if (searchCache == null || searchCache.Count > 100)
+            {
+                searchCache = new Dictionary<string, List<string>>();
+            }
+
+            //search table and return relevant page results
             try
             {
-         
+                //TODO SEARCH
+
                 return new JavaScriptSerializer().Serialize("");
             }
             catch (Exception e)
@@ -50,6 +101,172 @@ namespace WebRole
                 return "Error retrieving results.";
             }
 
+        }
+
+        //get return page title of the given url
+        [WebMethod]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string getPageTitle(string url)
+        {
+            //parse url
+            url = url.Trim();
+
+            pagesTable = setTable(Operation._PAGES_TABLE);
+
+            //check given url valid
+            try
+            {
+                if (!url.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+                {
+                    url = "http://" + url;
+                }
+
+                Uri uri = new Uri(url, UriKind.Absolute);
+                string uriString = uri.AbsoluteUri;
+                try
+                {
+                    //Create the table query
+                    TableQuery<PageEntity> pageQuery = new TableQuery<PageEntity>()
+                        .Where(TableQuery.CombineFilters(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, uri.Host),
+                        TableOperators.And,
+                        TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, Operation.md5Hash(uriString))));
+                    List<PageEntity> pages = pagesTable.ExecuteQuery(pageQuery).ToList();
+
+                    return pages.Count != 0 ? pages.First().title : "Title not found";
+                }
+                catch (Exception e)
+                {
+                    return "Error retrieving title";
+                }
+
+            }
+            catch (Exception e)
+            {
+                return "Please enter a valid url";
+            }
+        }
+
+        //clear index and stop crawling
+        [WebMethod]
+        public string clearIndex(string password)
+        {
+            password = password.Trim();
+            if (Operation.md5Hash(password) == Operation._CLRPW)
+            {
+                opQueue = setQueue(Operation._OP_QUEUE);
+                try
+                {
+                    CloudQueueMessage opMessage = new CloudQueueMessage(Operation._CLEAR);
+                    opQueue.AddMessage(opMessage);
+                    return "Stopping crawl... Clearing index...";
+                }
+                catch (Exception e)
+                {
+                    return "Error clearing index";
+                }
+            }
+            else
+            {
+                return "Incorrect password";
+            }
+        }
+
+        //stop crawling
+        //private string stopCrawling()
+        //{
+        //    checkQueue();
+        //    checkTable();
+
+        //    return "Succesfully stopped crawling";
+        //}
+
+        //get and return state of each worker, machine counters, last 10 urls crawled
+        //get and return number of urls crawled, url queue size, index size
+        [WebMethod]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string getStats()
+        {
+            statsTable = setTable(Operation._STATS_TABLE);
+
+            try
+            {
+                //get stats from stats table
+                //Create the table query
+                TableQuery<StatEntity> statQuery = new TableQuery<StatEntity>()
+                    .Where(TableQuery.CombineFilters(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, Operation._STAT_PKEY),
+                TableOperators.And,
+                TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, Operation._STAT_RKEY)));
+                StatEntity stat = statsTable.ExecuteQuery(statQuery).First();
+                
+                return new JavaScriptSerializer().Serialize(stat);
+            }
+            catch (Exception e)
+            {
+                return "Error retrieving stats";
+            }
+        }
+
+        //get and return # of words in trie and last word inserted
+        [WebMethod]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string getTrieStats()
+        {
+            try
+            {
+                TableQuery<StatEntity> statQuery = new TableQuery<StatEntity>()
+                    .Where(TableQuery.CombineFilters(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, Operation._TRIE_PKEY),
+                    TableOperators.And,
+                    TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, Operation._TRIE_RKEY)));
+                StatEntity stat = statsTable.ExecuteQuery(statQuery).First();
+
+                return new JavaScriptSerializer().Serialize(stat);
+            }
+            catch (Exception e)
+            {
+                return "Error retrieving trie stats";
+            }
+
+
+        }
+
+        //get and return any errors
+        [WebMethod]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string getErrors()
+        {
+            errorsTable = setTable(Operation._ERRORS_TABLE);
+
+            try
+            {
+                //get errors from errors table
+                //Create the table query
+                TableQuery<ErrorEntity> errorQuery = new TableQuery<ErrorEntity>();
+                List<ErrorEntity> errors = errorsTable.ExecuteQuery(errorQuery).ToList();
+
+                return new JavaScriptSerializer().Serialize(errors);
+            }
+            catch (Exception e)
+            {
+                return "Error retrieving errors";
+            }
+        }
+
+        private CloudQueue setQueue(string queue)
+        {
+            queueClient = storageAccount.CreateCloudQueueClient();
+            CloudQueue cloudQueue = queueClient.GetQueueReference(queue);
+            cloudQueue.CreateIfNotExists();
+
+            return cloudQueue;
+        }
+
+        private CloudTable setTable(string table)
+        {
+            tableClient = storageAccount.CreateCloudTableClient();
+            CloudTable cloudTable = tableClient.GetTableReference(table);
+            cloudTable.CreateIfNotExists();
+
+            return cloudTable;
         }
     }
 }

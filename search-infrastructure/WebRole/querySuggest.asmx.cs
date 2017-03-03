@@ -7,6 +7,9 @@ using System.Web.Script.Serialization;
 using System.Web.Script.Services;
 using System.Web.Services;
 using HybridTrie;
+using Microsoft.WindowsAzure.Storage.Table;
+using Elizabot;
+using System;
 
 namespace WebRole
 {
@@ -24,6 +27,7 @@ namespace WebRole
         private int _maxMem = 20;
         private PerformanceCounter theMemCounter = new PerformanceCounter("Memory", "Available MBytes");
         private static Trie trie;
+        private CloudStorageAccount storageAccount = CloudStorageAccount.Parse(ConfigurationManager.AppSettings["StorageConnectionString"]);
 
         //download data from the blob
         [WebMethod]
@@ -31,8 +35,6 @@ namespace WebRole
         {
             try
             {
-                CloudStorageAccount storageAccount = CloudStorageAccount.Parse(
-                ConfigurationManager.AppSettings["StorageConnectionString"]);
                 CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
                 CloudBlobContainer container = blobClient.GetContainerReference("blob");
                 CloudBlockBlob blockBlob = container.GetBlockBlobReference("wiki.txt");
@@ -57,7 +59,8 @@ namespace WebRole
         {
             trie = new Trie();
             int MAX = 1000;
-            int curr = 0;
+            int count = 0;
+            string term = "";
 
             try
             {
@@ -68,29 +71,46 @@ namespace WebRole
 
                 using (StreamReader sr = File.OpenText(path))
                 {
-                    string term = "";
-                    while ((term = sr.ReadLine()) != null)
+                    while (!sr.EndOfStream)
                     {
-                        curr++;
+                        term = sr.ReadLine();
+                        count++;
                         trie.insert(term);
 
-                        if (curr >= MAX)
+                        if (count % MAX == 0)
                         {
                             //perform memory check to ensure not running out of memory
                             if (getAvailableMBytes() <= _maxMem)
                             {
                                 break;
                             }
-                            curr = 0;
                         }
                     }
                 }
 
-                return "Successfully built trie";
+                try
+                {
+                    CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
+                    CloudTable statsTable = tableClient.GetTableReference(Operation._STATS_TABLE);
+                    statsTable.CreateIfNotExists();
+
+                    StatEntity stat = new StatEntity();
+                    stat.PartitionKey = Operation._TRIE_PKEY;
+                    stat.RowKey = Operation._TRIE_RKEY;
+                    stat.lastTenString = term;
+                    stat.indexSize = count;
+                    statsTable.ExecuteAsync(TableOperation.InsertOrReplace(stat));
+                }
+                catch (Exception e)
+                {
+                    return "Failed to insert trie stats into table";
+                }
+
+                return "Successfully built trie with " + count + " words. The last word was " + term;
             }
-            catch
+            catch (Exception e)
             {
-                return "Failed to build trie";
+                return "Error building trie";
             }
         }
 
