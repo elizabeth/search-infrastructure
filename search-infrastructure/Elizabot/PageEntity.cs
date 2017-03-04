@@ -14,9 +14,9 @@ namespace Elizabot
         public string pubDate { get; set; }
         public string body { get; set; }
 
-        public PageEntity(Uri uri, string title, string pubDate, string body)
+        public PageEntity(Uri uri, string title, string pubDate, string body, string keyWord)
         {
-            this.PartitionKey = uri.Host;
+            this.PartitionKey = keyWord;
             this.RowKey = Operation.md5Hash(uri.AbsoluteUri);
 
             this.uri = uri.AbsoluteUri;

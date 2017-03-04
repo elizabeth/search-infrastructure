@@ -73,11 +73,12 @@ $(document).ready(function () {
                 errorDiv.html('No errors have occurred');
             } else {
                 $.each(errors, function (index, error) {
-                    errorDiv.append($('<div>').text(error.url + ": " + error.err));
+                    errorDiv.append($('<div>').html('<b>'+error.url+'</b>' + ': ' + error.err));
                 });
             }
         }
         catch (err) {
+            $('#errors').text('Error retrieving errors');
         }
     })
     .fail(function (err) {
@@ -100,7 +101,7 @@ $(document).ready(function () {
                     $('#start-msg').text(data.d);
                 })
                 .fail(function (err) {
-                    $('#start-msg').text("Error starting crawl.");
+                    $('#start-msg').text('Error starting crawl');
                 });
         }
     });
@@ -123,7 +124,7 @@ $(document).ready(function () {
                 .fail(function (err) {
                     //error title
                     console.log(err);
-                    $('#page-title').text("Could not retrieve title.");
+                    $('#page-title').text('Could not retrieve title');
                 });
         }
     });
@@ -145,7 +146,7 @@ $(document).ready(function () {
             .fail(function (err) {
                 //error title
                 console.log(err);
-                $('#clear-msg').text("Error clearing index.");
+                $('#clear-msg').text('Error clearing index');
             });
         }
 

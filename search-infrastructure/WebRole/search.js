@@ -188,6 +188,9 @@ $(document).ready(function () {
     var clickSuggestion = (function(val) {
         $('#search').val(val);
         $('#suggestions').remove();
+        searchPlayers(val);
+        searchCrawler(val);
+        saveSearch(val);
     });
 
     //delay the keyup event for quickly typed characters

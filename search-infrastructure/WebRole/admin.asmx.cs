@@ -26,12 +26,12 @@ namespace WebRole
         private CloudQueueClient queueClient;
         private CloudQueue opQueue;
         private CloudQueue robotQueue;
-        private CloudQueue urlQueue;
+        //private CloudQueue urlQueue;
         private CloudTableClient tableClient;
         private CloudTable pagesTable;
         private CloudTable errorsTable;
         private CloudTable statsTable;
-        private static Dictionary<string, List<string>> searchCache;
+        private static Dictionary<string, List<PageEntity>> searchCache;
         private CloudStorageAccount storageAccount = CloudStorageAccount.Parse(ConfigurationManager.AppSettings["StorageConnectionString"]);
 
         //start crawling given root url
@@ -55,7 +55,7 @@ namespace WebRole
                 Uri uri = new Uri(url, UriKind.Absolute);
                 string uriString = uri.AbsoluteUri;
 
-                if (Operation.domains.Values.Any(uri.Host.Contains))
+                if (Operation.domains.Values.Any(uri.Host.EndsWith))
                 {
                     CloudQueueMessage opMessage = new CloudQueueMessage(Operation._START);
                     opQueue.AddMessage(opMessage);
@@ -84,23 +84,59 @@ namespace WebRole
             term = term.Trim().ToLower();
             pagesTable = setTable(Operation._PAGES_TABLE);
 
+            //check cache first if there
             if (searchCache == null || searchCache.Count > 100)
             {
-                searchCache = new Dictionary<string, List<string>>();
+                searchCache = new Dictionary<string, List<PageEntity>>();
             }
 
-            //search table and return relevant page results
+            if (searchCache.ContainsKey(term))
+            {
+                return new JavaScriptSerializer().Serialize(searchCache[term]);
+            }
+
+            //search table and return relevant page results ranked
             try
             {
-                //TODO SEARCH
+                Dictionary<string, PagePair> results = new Dictionary<string, PagePair>();
+                string[] terms = term.Split();
+                foreach (string word in terms)
+                {
+                    TableQuery<PageEntity> pageQuery = new TableQuery<PageEntity>()
+                        .Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, word));
+                    List<PageEntity> pages = pagesTable.ExecuteQuery(pageQuery).ToList();
 
-                return new JavaScriptSerializer().Serialize("");
+                    if (pages.Count != 0)
+                    {
+                        foreach (PageEntity page in pages)
+                        {
+                            if (results.ContainsKey(page.uri))
+                            {
+                                results[page.uri].count += 1;
+                            } else
+                            {
+                                results.Add(page.uri, new PagePair(page, 1));
+                            }
+                        }
+                    }
+                }
+
+                //Rank based on number of keyword matches and then by date
+                List<PageEntity> searchResults = results.OrderByDescending(x => x.Value.count)
+                    .ThenByDescending(x => x.Value.page.pubDate)
+                    .Select(x => x.Value.page)
+                    .Take(20)
+                    .ToList();
+
+                //add to cache
+                searchCache.Add(term, searchResults);
+
+                return new JavaScriptSerializer().Serialize(searchResults);
             }
             catch (Exception e)
             {
-                return "Error retrieving results.";
+                return "Error retrieving results";
             }
-
         }
 
         //get return page title of the given url
@@ -171,15 +207,6 @@ namespace WebRole
             }
         }
 
-        //stop crawling
-        //private string stopCrawling()
-        //{
-        //    checkQueue();
-        //    checkTable();
-
-        //    return "Succesfully stopped crawling";
-        //}
-
         //get and return state of each worker, machine counters, last 10 urls crawled
         //get and return number of urls crawled, url queue size, index size
         [WebMethod]
@@ -238,6 +265,8 @@ namespace WebRole
         {
             errorsTable = setTable(Operation._ERRORS_TABLE);
 
+            List<ErrorEntity> errorsList = new List<ErrorEntity>();
+
             try
             {
                 //get errors from errors table
@@ -245,7 +274,19 @@ namespace WebRole
                 TableQuery<ErrorEntity> errorQuery = new TableQuery<ErrorEntity>();
                 List<ErrorEntity> errors = errorsTable.ExecuteQuery(errorQuery).ToList();
 
-                return new JavaScriptSerializer().Serialize(errors);
+                //limit the errors returned to 20
+                foreach (ErrorEntity error in errors)
+                {
+                    if (errorsList.Count < 20)
+                    {
+                        errorsList.Add(error);
+                    } else
+                    {
+                        break;
+                    }
+                }
+
+                return new JavaScriptSerializer().Serialize(errorsList);
             }
             catch (Exception e)
             {

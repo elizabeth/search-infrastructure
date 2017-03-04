@@ -17,8 +17,9 @@ namespace Elizabot
         public int queueSize { get; set; }
         public int indexSize { get; set; }
         private Queue<Uri> lastTen;
+        private Boolean running;
 
-        public StatEntity(string pkey, string rkey, float cpuNum, float memNum)
+        public StatEntity(float cpuNum, float memNum)
         {
             this.PartitionKey = Operation._STAT_PKEY;
             this.RowKey = Operation._STAT_RKEY;
@@ -31,6 +32,7 @@ namespace Elizabot
             queueSize = 0;
             indexSize = 0;
             lastTen = new Queue<Uri>();
+            running = false;
         }
 
         public StatEntity() { }
@@ -79,6 +81,16 @@ namespace Elizabot
         public void updateQueue(int num)
         {
             updateQueueSize(num);
+        }
+
+        public void updateRunning()
+        {
+            running = !running;
+        }
+
+        public Boolean getRunning()
+        {
+            return running;
         }
 
         private void updateMachineCounters(float cpu, float memory)

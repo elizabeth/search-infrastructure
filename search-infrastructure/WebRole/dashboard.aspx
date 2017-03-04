@@ -6,7 +6,7 @@
 <head runat="server">
     <title>Dashboard</title>
     <link rel="stylesheet" href="https://unpkg.com/material-components-web@latest/dist/material-components-web.css"/>
-    <%--<link rel="stylesheet" href="dashboard.css" />--%>
+    <link rel="stylesheet" href="dashboard.css" />
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script type="text/javascript" src="https://unpkg.com/material-components-web@latest/dist/material-components-web.js"></script>
