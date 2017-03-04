@@ -31,7 +31,7 @@ namespace WebRole
         private CloudTable pagesTable;
         private CloudTable errorsTable;
         private CloudTable statsTable;
-        private static Dictionary<string, List<PageEntity>> searchCache;
+        private static Dictionary<string, List<PagePair>> searchCache;
         private CloudStorageAccount storageAccount = CloudStorageAccount.Parse(ConfigurationManager.AppSettings["StorageConnectionString"]);
 
         //start crawling given root url
@@ -87,7 +87,7 @@ namespace WebRole
             //check cache first if there
             if (searchCache == null || searchCache.Count > 100)
             {
-                searchCache = new Dictionary<string, List<PageEntity>>();
+                searchCache = new Dictionary<string, List<PagePair>>();
             }
 
             if (searchCache.ContainsKey(term))
@@ -113,19 +113,20 @@ namespace WebRole
                             if (results.ContainsKey(page.uri))
                             {
                                 results[page.uri].count += 1;
+                                results[page.uri].queryWords.Add(word);
                             } else
                             {
-                                results.Add(page.uri, new PagePair(page, 1));
+                                results.Add(page.uri, new PagePair(page, 1, word));
                             }
                         }
                     }
                 }
 
                 //Rank based on number of keyword matches and then by date
-                List<PageEntity> searchResults = results.OrderByDescending(x => x.Value.count)
+                List<PagePair> searchResults = results.OrderByDescending(x => x.Value.count)
                     .ThenByDescending(x => x.Value.page.pubDate)
-                    .Select(x => x.Value.page)
                     .Take(20)
+                    .Select(x => x.Value)
                     .ToList();
 
                 //add to cache
@@ -163,9 +164,7 @@ namespace WebRole
                 {
                     //Create the table query
                     TableQuery<PageEntity> pageQuery = new TableQuery<PageEntity>()
-                        .Where(TableQuery.CombineFilters(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, uri.Host),
-                        TableOperators.And,
-                        TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, Operation.md5Hash(uriString))));
+                        .Where(TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, Operation.md5Hash(uriString)));
                     List<PageEntity> pages = pagesTable.ExecuteQuery(pageQuery).ToList();
 
                     return pages.Count != 0 ? pages.First().title : "Title not found";

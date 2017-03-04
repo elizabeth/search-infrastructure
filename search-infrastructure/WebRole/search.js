@@ -174,7 +174,7 @@ $(document).ready(function () {
     //AJAX request to save search term to Trie
     function saveSearch(searchTerm) {
         $.ajax({
-            url: '/getQuerySuggest.asmx/saveSearch',
+            url: '/querySuggest.asmx/saveSearch',
             type: 'POST',
             data: JSON.stringify({ term: searchTerm }),
             contentType: 'application/json; charset=utf-8',

@@ -10,11 +10,14 @@ namespace Elizabot
     {
         public PageEntity page;
         public int count;
+        public HashSet<string> queryWords;
 
-        public PagePair(PageEntity page, int count)
+        public PagePair(PageEntity page, int count, string word)
         {
             this.page = page;
             this.count = count;
+            queryWords = new HashSet<string>();
+            queryWords.Add(word);
         }
     }
 }

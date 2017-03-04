@@ -90,10 +90,17 @@ namespace Elizabot
                             string[] keyWord = title.Trim().ToLower().Split();
                             foreach (string key in keyWord)
                             {
-                                //get page data and store to table
-                                PageEntity page = new PageEntity(uri, title, date, body, key);
-                                TableOperation insertOperation = TableOperation.Insert(page);
-                                pagesTable.ExecuteAsync(insertOperation);
+                                try
+                                {
+                                    //get page data and store to table
+                                    PageEntity page = new PageEntity(uri, title, date, body, key);
+                                    TableOperation insertOperation = TableOperation.Insert(page);
+                                    pagesTable.ExecuteAsync(insertOperation);
+                                } catch (Exception e)
+                                {
+                                    //may be same partition and row key
+                                    Console.Write(e.ToString());
+                                }
                             }
 
                             HtmlNode[] linkNodes = new HtmlNode[0];
@@ -158,7 +165,7 @@ namespace Elizabot
                 }
                 catch (Exception insErr)
                 {
-                    Console.Write((insErr.ToString()));
+                    Console.Write(insErr.ToString());
                 }
 
                 return -2;

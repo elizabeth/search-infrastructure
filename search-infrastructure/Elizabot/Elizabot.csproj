@@ -81,6 +81,7 @@
     <Compile Include="Host.cs" />
     <Compile Include="Operation.cs" />
     <Compile Include="PageEntity.cs" />
+    <Compile Include="PagePair.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StatEntity.cs" />
   </ItemGroup>
