@@ -5,6 +5,7 @@ $(document).ready(function () {
         e.preventDefault(e);
         $('#submit').blur();
         $('#search').blur();
+        $('#suggestions').remove();
 
         var search = $('#search').val();
         searchPlayers(search);
@@ -27,7 +28,10 @@ $(document).ready(function () {
                 if ($('#search').val()) {
                     $('#player').remove();
                     $('#results').remove();
-                    querySearch($("#search").val());
+                    var search = $('#search').val();
+                    querySearch(search);
+                    searchPlayers(search);
+                    searchCrawler(search);
                 } else {
                     $('#suggestions').remove();
                     $('#player').remove();
@@ -157,16 +161,30 @@ $(document).ready(function () {
                     } else {
                         //display the results
                         $.each(results, function (index, obj) {
-                            console.log(obj);
-                            var result = $('<div>').text(obj);
+                            var page = obj.page;
+                            var result = $('<div>');
+                            var heading = $('<h3>', { 'class': 'mdc-typography--subheading3' }).html(("<a href='" + page.uri + "'>" + page.title + "</a>"));
+                            var split = page.body.split(" ");
+                            var bodyString = "";
+                            for (var i = 0; i < split.length; i++) {
+                                var word = split[i];
+                                if (jQuery.inArray(word.toLowerCase(), obj.queryWords) != -1) {
+                                    bodyString += " <strong>" + word + "</strong>";
+                                } else {
+                                    bodyString += " " + word;
+                                }
+                            }
+                            var div = $('<div>').html(bodyString);
+
+                            searchResults.append(result.append(heading).append(div));
                         });
                     }
                 } catch (err) {
-                    results.text('Error retrieving search results.');
+                    searchResults.text('Error retrieving search results.');
                     console.log('Error retrieving search results. ' + err);
                 }
             }).fail(function (err) {
-                results.text('Error retrieving search results.');
+                searchResults.text('Error retrieving search results.');
                 console.log('Error retrieving search results. ' + err);
             });
     }

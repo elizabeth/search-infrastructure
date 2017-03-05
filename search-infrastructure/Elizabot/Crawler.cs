@@ -89,7 +89,7 @@ namespace Elizabot
                                 {
                                     if (body.Length > 40)
                                     {
-                                        body = Operation.stripHtml(bodyNode.InnerText).Substring(0, 100) + "...";
+                                        body = Operation.stripHtml(bodyNode.InnerText).Substring(0, 200) + "...";
                                     }
                                 }
 
