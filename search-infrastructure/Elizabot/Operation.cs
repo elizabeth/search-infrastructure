@@ -69,6 +69,21 @@ namespace Elizabot
             return hashed;
         }
 
+        //strip punctuation
+        public static string stripPunct(string value)
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+            foreach (char letter in value)
+            {
+                bool isLetterOrDigit = char.IsLetterOrDigit(letter);
+                if (isLetterOrDigit ||  letter == ' ')
+                {
+                    stringBuilder.Append(letter);
+                }
+            }
+            return stringBuilder.ToString().ToLower();
+        }
+
         //html body parsing
         //from https://gist.github.com/frankhale/3240804
         public static string stripHtml(string value)
@@ -86,5 +101,7 @@ namespace Elizabot
 
             return sanitizedString.ToString();
         }
+
+
     }
 }

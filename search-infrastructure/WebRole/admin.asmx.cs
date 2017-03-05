@@ -81,7 +81,7 @@ namespace WebRole
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
         public string searchPages(string term)
         {
-            term = term.Trim().ToLower();
+            term = Operation.stripPunct(term.Trim());
             pagesTable = setTable(Operation._PAGES_TABLE);
 
             //check cache first if there

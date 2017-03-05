@@ -34,7 +34,7 @@ namespace Elizabot
             this.errorsTable = errorsTable;
         }
 
-        //return -3, -2, -1, or a number 0 or greater based on reinserted url into queue, on error, not allowed/already visited, or inserted
+        //return -3, -2, -1, or a number 0 or greater based on reinserted url into queue, an error, not allowed/already visited, or inserted
         public int crawlSite(string url)
         {
             try
@@ -48,91 +48,106 @@ namespace Elizabot
                         //check if url has been visited before
                         if (!host.hasVisited(uri))
                         {
+                            HtmlDocument htmlDoc;
+
                             HtmlWeb web = new HtmlWeb();
-                            HtmlDocument htmlDoc = web.Load(uri.AbsoluteUri);
+                            htmlDoc = web.Load(uri.AbsoluteUri);
 
-                            string title = "";
-                            string date = "";
-                            string body = "";
+                            if (web.StatusCode == HttpStatusCode.OK)
+                            {
+                                string title = "";
+                                string date = "";
+                                string body = "";
 
-                            //get title
-                            HtmlNode titleNode = htmlDoc.DocumentNode.SelectSingleNode("//title");
-                            if (titleNode != null)
-                            {
-                                title = HttpUtility.HtmlDecode(titleNode.InnerHtml);
-                            }
-
-                            //get last mod date of page
-                            HtmlNode modNode = htmlDoc.DocumentNode.SelectSingleNode("//meta[@name='lastmod']");
-                            if (modNode != null)
-                            {
-                                date = modNode.GetAttributeValue("content", "");
-                            }
-                            else
-                            {
-                                //if no last mod date, check if there is a pub date 
-                                HtmlNode pubNode = htmlDoc.DocumentNode.SelectSingleNode("//meta[@name='pubdate']");
-                                if (pubNode != null)
+                                //get title
+                                HtmlNode titleNode = htmlDoc.DocumentNode.SelectSingleNode("//title");
+                                if (titleNode != null)
                                 {
-                                    date = pubNode.GetAttributeValue("content", "");
+                                    title = HttpUtility.HtmlDecode(titleNode.InnerHtml);
                                 }
-                            }
 
-                            //get body of page, parse html tags
-                            HtmlNode bodyNode = htmlDoc.DocumentNode.SelectSingleNode("//body");
-                            if (bodyNode != null)
-                            {
-                                body = Operation.stripHtml(bodyNode.InnerHtml);
-                            }
-
-                            //TODO UPDATE INDEX SIZE
-                            //Insert page with each word in the title as a row key
-                            string[] keyWord = title.Trim().ToLower().Split();
-                            foreach (string key in keyWord)
-                            {
-                                try
+                                //get last mod date of page
+                                HtmlNode modNode = htmlDoc.DocumentNode.SelectSingleNode("//meta[@name='lastmod']");
+                                if (modNode != null)
                                 {
-                                    //get page data and store to table
-                                    PageEntity page = new PageEntity(uri, title, date, body, key);
-                                    TableOperation insertOperation = TableOperation.Insert(page);
-                                    pagesTable.ExecuteAsync(insertOperation);
-                                } catch (Exception e)
-                                {
-                                    //may be same partition and row key
-                                    Console.Write(e.ToString());
+                                    date = modNode.GetAttributeValue("content", "");
                                 }
-                            }
-
-                            HtmlNode[] linkNodes = new HtmlNode[0];
-                            HtmlNodeCollection tempNodes = htmlDoc.DocumentNode.SelectNodes("//a");
-                            if (tempNodes != null)
-                            {
-                                linkNodes = tempNodes.ToArray();
-                            }
-                            Uri newUri;
-                            int updateQueue = 0;
-                            foreach (HtmlNode link in linkNodes)
-                            {
-                                //add url if within allowed domain
-                                try
+                                else
                                 {
-                                    newUri = new Uri(uri, link.GetAttributeValue("href", null));
-                                    if (Operation.domains.Values.Any(newUri.Host.Contains))
+                                    //if no last mod date, check if there is a pub date 
+                                    HtmlNode pubNode = htmlDoc.DocumentNode.SelectSingleNode("//meta[@name='pubdate']");
+                                    if (pubNode != null)
                                     {
-                                        updateQueue++;
-                                        CloudQueueMessage urlMessage = new CloudQueueMessage(newUri.AbsoluteUri);
-                                        urlQueue.AddMessageAsync(urlMessage);
+                                        date = pubNode.GetAttributeValue("content", "");
                                     }
                                 }
-                                catch (Exception e)
-                                {
-                                    //Invalid url
-                                    Console.WriteLine("Invalid html url found: " + e.ToString());
-                                }
-                            }
 
-                            host.addVisited(uri);
-                            return updateQueue;
+                                //get body of page, parse html tags
+                                HtmlNode bodyNode = htmlDoc.DocumentNode.SelectSingleNode("//body");
+                                if (bodyNode != null)
+                                {
+                                    body = Operation.stripHtml(bodyNode.InnerHtml);
+                                }
+
+                                //TODO UPDATE INDEX SIZE
+                                //Insert page with each word in the title as a row key
+                                string[] keyWord = Operation.stripPunct(title.Trim()).Split().Distinct().ToArray();
+                                foreach (string key in keyWord)
+                                {
+                                    if (key != "")
+                                    {
+                                        try
+                                        {
+                                            //get page data and store to table
+                                            PageEntity page = new PageEntity(uri, title, date, body, key);
+                                            TableOperation insertOperation = TableOperation.Insert(page);
+                                            pagesTable.Execute(insertOperation);
+                                        }
+                                        catch (Exception e)
+                                        {
+
+                                            //Insert error to table
+                                            ErrorEntity err = new ErrorEntity(url, e.ToString(), DateTime.Now.ToString());
+                                            TableOperation insertOperation = TableOperation.Insert(err);
+                                            errorsTable.ExecuteAsync(insertOperation);
+
+                                            Console.Write(e.ToString());
+                                            return -2;
+                                        }
+                                    }
+                                }
+
+                                HtmlNode[] linkNodes = new HtmlNode[0];
+                                HtmlNodeCollection tempNodes = htmlDoc.DocumentNode.SelectNodes("//a");
+                                if (tempNodes != null)
+                                {
+                                    linkNodes = tempNodes.ToArray();
+                                }
+                                Uri newUri;
+                                int updateQueue = 0;
+                                foreach (HtmlNode link in linkNodes)
+                                {
+                                    //add url if within allowed domain
+                                    try
+                                    {
+                                        newUri = new Uri(uri, link.GetAttributeValue("href", null));
+                                        if (Operation.domains.Values.Any(newUri.Host.Contains))
+                                        {
+                                            updateQueue++;
+                                            CloudQueueMessage urlMessage = new CloudQueueMessage(newUri.AbsoluteUri);
+                                            urlQueue.AddMessageAsync(urlMessage);
+                                        }
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        //Invalid url
+                                        Console.WriteLine("Invalid html url found: " + e.ToString());
+                                    }
+                                }
+
+                                host.addVisited(uri);
+                                return updateQueue;
+                            }
                         }
                     }
                 }
