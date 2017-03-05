@@ -158,7 +158,7 @@ namespace WorkerRole
                         updateStatsTable(statsTable);
 
                         int queueSizeUpdate = crawler.parseRobots(robotUrl.AsString);
-                        stat.updateQueue(queueSizeUpdate);
+                        //stat.updateQueue(queueSizeUpdate);
                         updateStatsTable(statsTable);
 
                         robotQueue.DeleteMessage(robotUrl);
@@ -173,21 +173,11 @@ namespace WorkerRole
                         stat.updateStatus(Operation._CRAWLING);
                         updateStatsTable(statsTable);
 
-                        int crawled = crawler.crawlSite(queueUrl.AsString);
-                        urlQueue.DeleteMessage(queueUrl);
+                        Tuple<int, int> crawled = crawler.crawlSite(queueUrl.AsString);
+                        stat.updateStats(new Uri(queueUrl.AsString), crawled.Item1, crawled.Item2);
+                        updateStatsTable(statsTable);
 
-                        if (crawled == -2)
-                        {
-                            stat.updateFailUrlStats();
-                        }
-                        else if (crawled == -1)
-                        {
-                            stat.updateQueueRem();
-                        }
-                        else if (crawled >= 0)
-                        {
-                            stat.updateStats(new Uri(queueUrl.AsString), crawled);
-                        }
+                        urlQueue.DeleteMessage(queueUrl);
                     }
                 } else
                 {

@@ -45,43 +45,46 @@ namespace Elizabot
             }
         }
 
-        public void updateQueue()
-        {
-            updateQueueSize(1);
-        }
+        //public void updateQueue()
+        //{
+        //    updateQueueSize(1);
+        //}
 
         public void updateMachine(float cpu, float memory)
         {
             updateMachineCounters(cpu, memory);
         }
 
-        //update various stats once a new url has been crawled
-        public void updateStats(Uri uri, int num)
+        //update various stats once a new url has been popped
+        public void updateStats(Uri uri, int index, int queue)
         {
-            addLatest(uri);
-            urlsCrawled++;
-            queueSize--;
-            updateQueueSize(num);
-            indexSize++;
+            if (index > 0)
+            {
+                addLatest(uri);
+                urlsCrawled++;
+            }
+            
+            queueSize += queue;
+            indexSize += index;
         }
 
         //update various stats if a url was crawled but did not update table with its data
-        public void updateFailUrlStats()
-        {
-            urlsCrawled++;
-            updateQueueRem();
-        }
+        //public void updateFailUrlStats()
+        //{
+        //    urlsCrawled++;
+        //    updateQueueRem();
+        //}
 
         //update various stats if a url was not allowed or already visited
-        public void updateQueueRem()
-        {
-            updateQueueSize(-1);
-        }
+        //public void updateQueueRem()
+        //{
+        //    updateQueueSize(-1);
+        //}
 
-        public void updateQueue(int num)
-        {
-            updateQueueSize(num);
-        }
+        //public void updateQueue(int num)
+        //{
+        //    updateQueueSize(num);
+        //}
 
         public void updateRunning()
         {

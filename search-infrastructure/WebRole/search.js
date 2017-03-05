@@ -162,13 +162,30 @@ $(document).ready(function () {
                         //display the results
                         $.each(results, function (index, obj) {
                             var page = obj.page;
-                            var result = $('<div>');
+                            var result = $('<div>', { 'class': 'mdc-layout-grid__cell mdc-layout-grid__cell--span-12 result' });
                             var heading = $('<h3>', { 'class': 'mdc-typography--subheading3' }).html(("<a href='" + page.uri + "'>" + page.title + "</a>"));
                             var split = page.body.split(" ");
-                            var bodyString = "";
+                            var date = new Date(page.pubDate);
+                            var bodyString = "<span class='date'>" + date.toDateString() + "</span> - ";
+                            //var found = false;
                             for (var i = 0; i < split.length; i++) {
-                                var word = split[i];
-                                if (jQuery.inArray(word.toLowerCase(), obj.queryWords) != -1) {
+                                var word = split[i].toLowerCase();
+                                //$.each(obj.queryWords, function (wordIndex, queryWord) {
+                                //    if (word.includes(queryWord)) {
+                                //        console.log(queryWord);
+                                //        bodyString += " <strong>" + word + "</strong>";
+                                //        found = true;
+                                //        return false;
+                                //    }
+                                //});
+
+                                //if (!found) {
+                                //    bodyString += " " + word;
+                                //}
+
+                                //found = false;
+
+                                if (jQuery.inArray(word, obj.queryWords) != -1) {
                                     bodyString += " <strong>" + word + "</strong>";
                                 } else {
                                     bodyString += " " + word;

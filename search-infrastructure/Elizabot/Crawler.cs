@@ -34,13 +34,17 @@ namespace Elizabot
             this.errorsTable = errorsTable;
         }
 
-        //return -3, -2, -1, or a number 0 or greater based on reinserted url into queue, an error, not allowed/already visited, or inserted
-        public int crawlSite(string url)
+        //returns a tuple of the increased index size and increased url queue size
+        public Tuple<int, int> crawlSite(string url)
         {
+            int updateIndex = 0;
+            int updateQueue = -1;
+
             try
             {
                 Uri uri = new Uri(url);
                 Host host;
+
                 if (hosts.TryGetValue(uri.Host, out host))
                 {
                     if (host.isAllowed(uri))
@@ -56,7 +60,7 @@ namespace Elizabot
                             if (web.StatusCode == HttpStatusCode.OK)
                             {
                                 string title = "";
-                                string date = "";
+                                string date = DateTime.UtcNow.ToString("s", System.Globalization.CultureInfo.InvariantCulture);
                                 string body = "";
 
                                 //get title
@@ -87,15 +91,14 @@ namespace Elizabot
                                 HtmlNode bodyNode = htmlDoc.DocumentNode.SelectSingleNode("//p[contains(@class,'zn-body__paragraph')]");
                                 if (bodyNode != null)
                                 {
-                                    if (body.Length > 40)
+                                    if (body.Length > 200)
                                     {
                                         body = Operation.stripHtml(bodyNode.InnerText).Substring(0, 200) + "...";
                                     }
                                 }
 
-                                //TODO UPDATE INDEX SIZE
                                 //Insert page with each word in the title as a row key
-                                string[] keyWord = Operation.stripPunct(title.Trim()).Split().Distinct().ToArray();
+                                string[] keyWord = Operation.stripPunct(title).Split().Distinct().ToArray();
                                 foreach (string key in keyWord)
                                 {
                                     if (key != "")
@@ -106,17 +109,16 @@ namespace Elizabot
                                             PageEntity page = new PageEntity(uri, title, date, body, key);
                                             TableOperation insertOperation = TableOperation.Insert(page);
                                             pagesTable.Execute(insertOperation);
+                                            updateIndex++;
                                         }
                                         catch (Exception e)
                                         {
-
                                             //Insert error to table
                                             ErrorEntity err = new ErrorEntity(url, e.ToString(), DateTime.Now.ToString());
                                             TableOperation insertOperation = TableOperation.Insert(err);
                                             errorsTable.ExecuteAsync(insertOperation);
 
                                             Console.Write(e.ToString());
-                                            return -2;
                                         }
                                     }
                                 }
@@ -128,7 +130,6 @@ namespace Elizabot
                                     linkNodes = tempNodes.ToArray();
                                 }
                                 Uri newUri;
-                                int updateQueue = 0;
                                 foreach (HtmlNode link in linkNodes)
                                 {
                                     //add url if within allowed domain
@@ -137,9 +138,20 @@ namespace Elizabot
                                         newUri = new Uri(uri, link.GetAttributeValue("href", null));
                                         if (Operation.domains.Values.Any(newUri.Host.Contains))
                                         {
-                                            updateQueue++;
-                                            CloudQueueMessage urlMessage = new CloudQueueMessage(newUri.AbsoluteUri);
-                                            urlQueue.AddMessageAsync(urlMessage);
+                                            if (newUri.Host.Contains(Operation.domains["BR1"]) || newUri.Host.Contains(Operation.domains["BR2"]))
+                                            {
+                                                if (newUri.AbsolutePath.StartsWith(Operation._BR_PATH))
+                                                {
+                                                    CloudQueueMessage urlMessage = new CloudQueueMessage(newUri.AbsoluteUri);
+                                                    urlQueue.AddMessageAsync(urlMessage);
+                                                    updateQueue++;
+                                                }
+                                            } else
+                                            {
+                                                CloudQueueMessage urlMessage = new CloudQueueMessage(newUri.AbsoluteUri);
+                                                urlQueue.AddMessageAsync(urlMessage);
+                                                updateQueue++;
+                                            }
                                         }
                                     }
                                     catch (Exception e)
@@ -150,7 +162,6 @@ namespace Elizabot
                                 }
 
                                 host.addVisited(uri);
-                                return updateQueue;
                             }
                         }
                     }
@@ -167,10 +178,8 @@ namespace Elizabot
 
                         CloudQueueMessage urlMessage = new CloudQueueMessage(uri.AbsoluteUri);
                         urlQueue.AddMessage(urlMessage);
-
-                        return -3;
+                        updateQueue++;
                     }
-
                 }
             }
             catch (Exception e)
@@ -186,10 +195,8 @@ namespace Elizabot
                 {
                     Console.Write(insErr.ToString());
                 }
-
-                return -2;
             }
-            return -1;
+            return new Tuple<int, int>(updateIndex, updateQueue);
         }
 
         public int parseRobots(string url)

@@ -2,12 +2,18 @@
     width: 100%;
 }
 
+#whale {
+    margin: 0 auto;
+    display: block;
+}
+
 #search {
     width: 100%;
 }
 
 #submitDiv {
     position: relative;
+    padding-top: 50px;
 }
 
 #submit {
@@ -69,9 +75,23 @@ td {
     color: #fff;
 }
 
+.result a {
+    color: #3f51b5;
+}
+
+.date {
+    color: rgba(0, 0, 0, 0.54);
+}
+
 hr {
     margin-left: 10px;
     margin-right: 10px;
     margin-top: 5px;
     border-top: 1px solid #eceeef;
+}
+
+@media(min-width: 840px) {
+    #submitDiv {
+        padding-top: 0;
+    }
 }

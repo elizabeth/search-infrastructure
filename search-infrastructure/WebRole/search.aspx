@@ -5,6 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" class="mdc-typography mdc-theme--background">
 <head runat="server">
     <title>Search</title>
+    <link rel="shortcut icon" href="whale.png" type="image/png" /> 
     <link rel="stylesheet" href="https://unpkg.com/material-components-web@latest/dist/material-components-web.css"/>
     <link rel="stylesheet" href="search.css" />
 
@@ -15,6 +16,7 @@
 <body class="mdc-typography--body2">
     <div class="mdc-layout-grid">
         <form id="searchForm" class="mdc-layout-grid__cell mdc-layout-grid__cell--span-12" runat="server">
+            <img id="whale" src="whale-search.png" />
             <div class="mdc-layout-grid" style="padding-bottom:0">
                 <div class="mdc-textfield mdc-textfield--upgraded mdc-layout-grid__cell mdc-layout-grid__cell--span-10" style="margin-bottom:0">
                     <input type="text" id="search" name="search" class="mdc-textfield__input" placeholder="search" autocomplete="off" required="required"/>

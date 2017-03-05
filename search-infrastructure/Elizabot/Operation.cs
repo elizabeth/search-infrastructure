@@ -28,6 +28,7 @@ namespace Elizabot
         public static string _CLRPW = "421458b04cdb19cc25c0f44a52c077c7";
         public static DateTime _CNN_DATE = new DateTime(2017, 01, 01);  //cnn domain cutoff date
         public static string _BR_SITEMAP = "http://bleacherreport.com/sitemap/nba.xml"; //bleacherreport sitemap to follow
+        public static string _BR_PATH = "/articles";
         //public static string _BBC_SITEMAP = "http://www.bbc.co.uk/sitemap.xml";
         public static Dictionary<string, string> domains
             = new Dictionary<string, string>
@@ -46,8 +47,7 @@ namespace Elizabot
                 { "ESPN2", "www.espn.com" },
                 { "WIKIPEDIA1", "wikipedia.org" },
                 { "WIKIPEDIA2", "en.wikipedia.org" },
-                { "WIKIPEDIA3", "www.wikipedia.org" },
-
+                { "WIKIPEDIA3", "www.wikipedia.org" }
             };
 
         public static string md5Hash(string toHash)
@@ -72,6 +72,7 @@ namespace Elizabot
         //strip punctuation
         public static string stripPunct(string value)
         {
+            value = value.Trim().ToLower();
             StringBuilder stringBuilder = new StringBuilder();
             foreach (char letter in value)
             {
@@ -81,7 +82,7 @@ namespace Elizabot
                     stringBuilder.Append(letter);
                 }
             }
-            return stringBuilder.ToString().ToLower();
+            return stringBuilder.ToString();
         }
 
         //html body parsing

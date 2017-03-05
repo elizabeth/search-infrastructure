@@ -5,6 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" class="mdc-typography mdc-theme--background">
 <head runat="server">
     <title>Dashboard</title>
+    <link rel="shortcut icon" href="whale.png" type="image/png" />
     <link rel="stylesheet" href="https://unpkg.com/material-components-web@latest/dist/material-components-web.css"/>
     <link rel="stylesheet" href="dashboard.css" />
 
