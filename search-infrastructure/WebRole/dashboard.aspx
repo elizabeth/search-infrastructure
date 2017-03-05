@@ -55,7 +55,7 @@
             <div class="mdc-textfield mdc-textfield--upgraded">
                 <input type="password" class="mdc-textfield__input" name="password" id="password" placeholder="enter password" />
             </div>
-            <button class="mdc-button mdc-button--raised mdc-button--accent mdc-ripple-upgraded">Clear</button>
+            <button id="clear" class="mdc-button mdc-button--raised mdc-button--accent mdc-ripple-upgraded">Clear</button>
             <div id="clear-msg" class="mdc-typography--subheading1"></div>
 
             <h3 class="mdc-typography--subheading3">Last 10 URLs</h3>

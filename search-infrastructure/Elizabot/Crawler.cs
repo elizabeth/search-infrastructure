@@ -64,6 +64,7 @@ namespace Elizabot
                                 if (titleNode != null)
                                 {
                                     title = HttpUtility.HtmlDecode(titleNode.InnerHtml);
+                                    body = title;
                                 }
 
                                 //get last mod date of page
@@ -83,10 +84,13 @@ namespace Elizabot
                                 }
 
                                 //get body of page, parse html tags
-                                HtmlNode bodyNode = htmlDoc.DocumentNode.SelectSingleNode("//body");
+                                HtmlNode bodyNode = htmlDoc.DocumentNode.SelectSingleNode("//p[contains(@class,'zn-body__paragraph')]");
                                 if (bodyNode != null)
                                 {
-                                    body = Operation.stripHtml(bodyNode.InnerHtml);
+                                    if (body.Length > 40)
+                                    {
+                                        body = Operation.stripHtml(bodyNode.InnerText).Substring(0, 100) + "...";
+                                    }
                                 }
 
                                 //TODO UPDATE INDEX SIZE
