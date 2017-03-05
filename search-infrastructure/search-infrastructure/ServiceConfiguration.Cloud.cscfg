@@ -3,13 +3,13 @@
   <Role name="WebRole">
     <Instances count="1" />
     <ConfigurationSettings>
-      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="UseDevelopmentStorage=true" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="DefaultEndpointsProtocol=https;AccountName=elizacloud;AccountKey=gZfF+oSmARHkFcgJpRCKEZnIInrpJC6iFhogEX82TOrFDintq/X73dtuokEC+NYHbuPN2Bv3dYkU8VdoU/nTHw==" />
     </ConfigurationSettings>
   </Role>
   <Role name="WorkerRole">
     <Instances count="1" />
     <ConfigurationSettings>
-      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="UseDevelopmentStorage=true" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="DefaultEndpointsProtocol=https;AccountName=elizacloud;AccountKey=gZfF+oSmARHkFcgJpRCKEZnIInrpJC6iFhogEX82TOrFDintq/X73dtuokEC+NYHbuPN2Bv3dYkU8VdoU/nTHw==" />
     </ConfigurationSettings>
   </Role>
 </ServiceConfiguration>

@@ -102,6 +102,8 @@
   <ItemGroup>
     <Content Include="dashboard.css" />
     <Content Include="packages.config" />
+    <Content Include="whale-search.png" />
+    <Content Include="whale.png" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
