@@ -75,7 +75,7 @@ namespace Elizabot
                 sb.Append(hash[i].ToString("X2"));
             }
 
-            string hashed = sb.ToString();
+            string hashed = sb.ToString().ToLower();
 
             return hashed;
         }

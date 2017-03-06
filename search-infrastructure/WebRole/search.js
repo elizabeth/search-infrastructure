@@ -164,6 +164,7 @@ $(document).ready(function () {
                             var page = obj.page;
                             var result = $('<div>', { 'class': 'mdc-layout-grid__cell mdc-layout-grid__cell--span-12 result' });
                             var heading = $('<h3>', { 'class': 'mdc-typography--subheading3' }).html(("<a href='" + page.uri + "'>" + page.title + "</a>"));
+                            var url = $('<div>', { 'class': 'url' }).text(page.uri);
                             var split = page.desc.split(" ");
                             var date = new Date(page.pubDate);
                             var descString = "<span class='date'>" + date.toDateString() + "</span> - ";
@@ -193,7 +194,7 @@ $(document).ready(function () {
                             }
                             var div = $('<div>').html(descString);
 
-                            searchResults.append(result.append(heading).append(div));
+                            searchResults.append(result.append(heading).append(url).append(div));
                         });
                     }
                 } catch (err) {

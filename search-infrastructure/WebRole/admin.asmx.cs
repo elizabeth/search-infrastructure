@@ -159,12 +159,12 @@ namespace WebRole
                 }
 
                 Uri uri = new Uri(url, UriKind.Absolute);
-                string uriString = uri.AbsoluteUri;
+                string uriString = Operation.md5Hash(uri.AbsoluteUri);
                 try
                 {
                     //Create the table query
                     TableQuery<PageEntity> pageQuery = new TableQuery<PageEntity>()
-                        .Where(TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, Operation.md5Hash(uriString)));
+                        .Where(TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, uriString));
                     List<PageEntity> pages = pagesTable.ExecuteQuery(pageQuery).ToList();
 
                     return pages.Count != 0 ? pages.First().title : "Title not found";
