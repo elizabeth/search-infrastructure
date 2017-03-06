@@ -19,13 +19,10 @@
             <img id="whale" src="whale-search.png" />
             <div class="mdc-layout-grid" style="padding-bottom:0">
                 <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-12">
-                <div id="inputDiv" class="mdc-textfield mdc-textfield--upgraded " style="margin-bottom:0">
-                    <input type="text" id="search" name="search" class="mdc-textfield__input" placeholder="search" autocomplete="off" required="required"/>
-                    <button id="submit" class="mdc-button mdc-button--raised mdc-button--accent mdc-ripple-upgraded" type="submit">Search</button>
-                </div>
-
-<%--                <div id="submitDiv">
-                </div>--%>
+                    <div id="inputDiv" class="mdc-textfield mdc-textfield--upgraded " style="margin-bottom:0">
+                        <input type="text" id="search" name="search" class="mdc-textfield__input" placeholder="search" autocomplete="off" required="required"/>
+                        <button id="submit" class="mdc-button mdc-button--raised mdc-button--accent mdc-ripple-upgraded" type="submit">Search</button>
+                    </div>
                 </div>
             </div>
 
