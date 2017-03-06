@@ -52,19 +52,30 @@ namespace Elizabot
 
         public static string md5Hash(string toHash)
         {
-            byte[] ended = new UTF8Encoding().GetBytes(toHash);
+            //byte[] ended = new UTF8Encoding().GetBytes(toHash);
 
-            MD5 md5Hash = MD5.Create();
+            //MD5 md5Hash = MD5.Create();
 
-            // need MD5 to calculate the hash
-            byte[] hash = ((HashAlgorithm)CryptoConfig.CreateFromName("MD5")).ComputeHash(ended);
+            //// need MD5 to calculate the hash
+            //byte[] hash = ((HashAlgorithm)CryptoConfig.CreateFromName("MD5")).ComputeHash(ended);
 
-            // string representation (similar to UNIX format)
-            string hashed = BitConverter.ToString(hash)
-               // without dashes
-               .Replace("-", string.Empty)
-               // make lowercase
-               .ToLower();
+            //// string representation (similar to UNIX format)
+            //string hashed = BitConverter.ToString(hash)
+            //   // without dashes
+            //   .Replace("-", string.Empty)
+            //   // make lowercase
+            //   .ToLower();
+
+            MD5 md5 = MD5.Create();
+            byte[] inputBytes = Encoding.ASCII.GetBytes(toHash);
+            byte[] hash = md5.ComputeHash(inputBytes);
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < hash.Length; i++)
+            {
+                sb.Append(hash[i].ToString("X2"));
+            }
+
+            string hashed = sb.ToString();
 
             return hashed;
         }
@@ -72,7 +83,7 @@ namespace Elizabot
         //strip punctuation
         public static string stripPunct(string value)
         {
-            value = value.Trim().ToLower();
+            value = value.Trim();
             StringBuilder stringBuilder = new StringBuilder();
             foreach (char letter in value)
             {
@@ -87,21 +98,21 @@ namespace Elizabot
 
         //html body parsing
         //from https://gist.github.com/frankhale/3240804
-        public static string stripHtml(string value)
-        {
-            HtmlDocument htmlDoc = new HtmlDocument();
-            htmlDoc.LoadHtml(value);
+        //public static string stripHtml(string value)
+        //{
+        //    HtmlDocument htmlDoc = new HtmlDocument();
+        //    htmlDoc.LoadHtml(value);
 
-            if (htmlDoc == null)
-                return value;
+        //    if (htmlDoc == null)
+        //        return value;
 
-            StringBuilder sanitizedString = new StringBuilder();
+        //    StringBuilder sanitizedString = new StringBuilder();
 
-            foreach (var node in htmlDoc.DocumentNode.ChildNodes)
-                sanitizedString.Append(node.InnerText);
+        //    foreach (var node in htmlDoc.DocumentNode.ChildNodes)
+        //        sanitizedString.Append(node.InnerText);
 
-            return sanitizedString.ToString();
-        }
+        //    return sanitizedString.ToString();
+        //}
 
 
     }

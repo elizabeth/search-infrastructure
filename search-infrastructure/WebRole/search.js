@@ -164,9 +164,9 @@ $(document).ready(function () {
                             var page = obj.page;
                             var result = $('<div>', { 'class': 'mdc-layout-grid__cell mdc-layout-grid__cell--span-12 result' });
                             var heading = $('<h3>', { 'class': 'mdc-typography--subheading3' }).html(("<a href='" + page.uri + "'>" + page.title + "</a>"));
-                            var split = page.body.split(" ");
+                            var split = page.desc.split(" ");
                             var date = new Date(page.pubDate);
-                            var bodyString = "<span class='date'>" + date.toDateString() + "</span> - ";
+                            var descString = "<span class='date'>" + date.toDateString() + "</span> - ";
                             //var found = false;
                             for (var i = 0; i < split.length; i++) {
                                 var word = split[i].toLowerCase();
@@ -186,12 +186,12 @@ $(document).ready(function () {
                                 //found = false;
 
                                 if (jQuery.inArray(word, obj.queryWords) != -1) {
-                                    bodyString += " <strong>" + word + "</strong>";
+                                    descString += " <strong>" + word + "</strong>";
                                 } else {
-                                    bodyString += " " + word;
+                                    descString += " " + word;
                                 }
                             }
-                            var div = $('<div>').html(bodyString);
+                            var div = $('<div>').html(descString);
 
                             searchResults.append(result.append(heading).append(div));
                         });
@@ -242,7 +242,7 @@ $(document).ready(function () {
     var suggestDiv = function () {
         //create div to show results in if does not exist
         if ($('#suggestions').length == 0) {
-            $('#outer').append($('<div>', { id: 'suggestions', class: 'dropdown-content'}));
+            $('#outer').append($('<div>', { id: 'suggestions', class: 'dropdown-content' }));
         }
         return $('#suggestions').text('');
     };
@@ -252,7 +252,7 @@ $(document).ready(function () {
     var playerDiv = function () {
         //create div to show results in if does not exist
         if ($('#player').length == 0) {
-            $('#searchResults').append($('<div>', { id: 'player', class: 'mdc-layout-grid' }));
+            $('#searchResults').append($('<div>', { id: 'player', class: 'mdc-layout-grid max-width' }));
         }
         return $('#player').text('');
     };
@@ -262,7 +262,7 @@ $(document).ready(function () {
     var resultsDiv = function () {
         //create div to show results in if does not exist
         if ($('#results').length == 0) {
-            $('#searchResults').append($('<div>', { id: 'results', class: 'mdc-layout-grid' }));
+            $('#searchResults').append($('<div>', { id: 'results', class: 'mdc-layout-grid max-width' }));
         }
         return $('#results').text('');
     };

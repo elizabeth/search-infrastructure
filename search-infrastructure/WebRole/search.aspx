@@ -14,7 +14,7 @@
     <script type="text/javascript" src="search.js"></script>
 </head>
 <body class="mdc-typography--body2">
-    <div class="mdc-layout-grid">
+    <div class="mdc-layout-grid max-width">
         <form id="searchForm" class="mdc-layout-grid__cell mdc-layout-grid__cell--span-12" runat="server">
             <img id="whale" src="whale-search.png" />
             <div class="mdc-layout-grid" style="padding-bottom:0">
@@ -27,7 +27,7 @@
                 </div>
             </div>
 
-            <div class="mdc-layout-grid" style="padding-top:0">
+            <div class="mdc-layout-grid max-width" style="padding-top:0">
                 <div id="outer" class="mdc-layout-grid__cell mdc-layout-grid__cell--span-10" style="margin-top:0"></div>
             </div>
         </form>

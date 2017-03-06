@@ -63,12 +63,29 @@ namespace Elizabot
                                 string date = DateTime.UtcNow.ToString("s", System.Globalization.CultureInfo.InvariantCulture);
                                 string body = "";
 
+                                host.addVisited(uri);
+
                                 //get title
-                                HtmlNode titleNode = htmlDoc.DocumentNode.SelectSingleNode("//title");
-                                if (titleNode != null)
+                                HtmlNode metaTitleNode = htmlDoc.DocumentNode.SelectSingleNode("//meta[@name='title']");
+                                if (metaTitleNode != null)
                                 {
-                                    title = HttpUtility.HtmlDecode(titleNode.InnerHtml);
+                                    title = metaTitleNode.GetAttributeValue("content", "");
                                     body = title;
+                                } else {
+                                    HtmlNode metaOgTitleNode = htmlDoc.DocumentNode.SelectSingleNode("//meta[@name='og:title']");
+                                    if (metaOgTitleNode != null)
+                                    {
+                                        title = metaOgTitleNode.GetAttributeValue("content", "");
+                                        body = title;
+                                    } else
+                                    {
+                                        HtmlNode titleNode = htmlDoc.DocumentNode.SelectSingleNode("//title");
+                                        if (titleNode != null)
+                                        {
+                                            title = HttpUtility.HtmlDecode(titleNode.InnerHtml);
+                                            body = title;
+                                        }
+                                    }
                                 }
 
                                 //get last mod date of page
@@ -87,18 +104,35 @@ namespace Elizabot
                                     }
                                 }
 
-                                //get body of page, parse html tags
-                                HtmlNode bodyNode = htmlDoc.DocumentNode.SelectSingleNode("//p[contains(@class,'zn-body__paragraph')]");
-                                if (bodyNode != null)
+                                //get body of page
+                                HtmlNode metaDescNode = htmlDoc.DocumentNode.SelectSingleNode("//meta[@name='description']");
+                                if (metaDescNode != null)
                                 {
-                                    if (body.Length > 200)
+                                    body = metaDescNode.GetAttributeValue("content", "");
+                                }
+                                else
+                                {
+                                    HtmlNode metaOgDescNode = htmlDoc.DocumentNode.SelectSingleNode("//meta[@name='og:description']");
+                                    if (metaOgDescNode != null)
                                     {
-                                        body = Operation.stripHtml(bodyNode.InnerText).Substring(0, 200) + "...";
+                                        body = metaOgDescNode.GetAttributeValue("content", "");
+                                    } else
+                                    {
+
                                     }
                                 }
 
+                                //HtmlNode bodyNode = htmlDoc.DocumentNode.SelectSingleNode("//p[contains(@class,'zn-body__paragraph')]");
+                                //if (bodyNode != null)
+                                //{
+                                //    if (body.Length > 200)
+                                //    {
+                                //        body = Operation.stripHtml(bodyNode.InnerText).Substring(0, 200) + "...";
+                                //    }
+                                //}
+
                                 //Insert page with each word in the title as a row key
-                                string[] keyWord = Operation.stripPunct(title).Split().Distinct().ToArray();
+                                string[] keyWord = Operation.stripPunct(title.ToLower()).Split().Distinct().ToArray();
                                 foreach (string key in keyWord)
                                 {
                                     if (key != "")
@@ -114,7 +148,7 @@ namespace Elizabot
                                         catch (Exception e)
                                         {
                                             //Insert error to table
-                                            ErrorEntity err = new ErrorEntity(url, e.ToString(), DateTime.Now.ToString());
+                                            ErrorEntity err = new ErrorEntity(url, e.Message, DateTime.Now.ToString());
                                             TableOperation insertOperation = TableOperation.Insert(err);
                                             errorsTable.ExecuteAsync(insertOperation);
 
@@ -161,7 +195,7 @@ namespace Elizabot
                                     }
                                 }
 
-                                host.addVisited(uri);
+                                
                             }
                         }
                     }
@@ -185,7 +219,7 @@ namespace Elizabot
             catch (Exception e)
             {
                 //Insert error to table
-                ErrorEntity err = new ErrorEntity(url, e.ToString(), DateTime.Now.ToString());
+                ErrorEntity err = new ErrorEntity(url, e.Message, DateTime.Now.ToString());
                 try
                 {
                     TableOperation insertOperation = TableOperation.Insert(err);

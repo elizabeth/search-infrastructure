@@ -1,4 +1,13 @@
-﻿#searchForm {
+﻿.max-width {
+    max-width: 1600px;
+}
+
+img {
+    width: 100%;
+    height: auto;
+}
+
+#searchForm {
     width: 100%;
 }
 
