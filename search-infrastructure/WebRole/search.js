@@ -105,24 +105,30 @@ $(document).ready(function () {
                         name.text(stats['name']);
                         row1.append(name);
 
+                        var info = $('<div>', { 'class': 'info' }).html('<strong>Team:</strong> ' + stats['team'] + '<br><strong>GP:</strong> ' + stats['gp'] + '<br><strong>MIN:</strong> ' + stats['min']);
+                        var nameArr = stats['name'].split(' ');
+                        var pic = 'https://nba-players.herokuapp.com/players/' + nameArr[nameArr.length - 1] + '/' + nameArr[0];
+                        row2.append($('<img>', { 'alt': 'Player Picture', 'class': 'nba-picture', 'src': pic}).on('error', function() {
+                            this.src='nba-pic.jpg';
+                        })).append(info);
+
+
                         var table = $('<table>');
                         var trh1 = $('<tr>');
                         var tr1 = $('<tr>');
-                        trh1.append($('<th>').text('Team')).append($('<th>').text('GP')).append($('<th>').text('MIN')).append($('<th>').text('FGM')).append($('<th>').text('FGA'))
-                            .append($('<th>').text('FG%')).append($('<th>').text('3PM')).append($('<th>').text('3PA')).append($('<th>').text('3P%')).append($('<th>').text('FTM'))
-                            .append($('<th>').text('FTA')).append($('<th>').text('FT%'));
-                        tr1.append($('<td>').text(stats['team'])).append($('<td>').text(stats['gp'])).append($('<td>').text(stats['min'])).append($('<td>').text(stats['fg_m']))
-                            .append($('<td>').text(stats['fg_a'])).append($('<td>').text(stats['fg_pct'])).append($('<td>').text(stats['three_pt_m'])).append($('<td>').text(stats['three_pt_a']))
-                            .append($('<td>').text(stats['three_pt_pct'])).append($('<td>').text(stats['ft_m'])).append($('<td>').text(stats['ft_a'])).append($('<td>').text(stats['ft_pct']));
+                        trh1.append($('<th>').text('FGM')).append($('<th>').text('FGA')).append($('<th>').text('FG%')).append($('<th>').text('3PM')).append($('<th>').text('3PA'))
+                            .append($('<th>').text('3P%')).append($('<th>').text('FTM')).append($('<th>').text('FTA')).append($('<th>').text('FT%'));
+                        tr1.append($('<td>').text(stats['fg_m'])).append($('<td>').text(stats['fg_a'])).append($('<td>').text(stats['fg_pct']))
+                            .append($('<td>').text(stats['three_pt_m'])).append($('<td>').text(stats['three_pt_a'])).append($('<td>').text(stats['three_pt_pct']))
+                            .append($('<td>').text(stats['ft_m'])).append($('<td>').text(stats['ft_a'])).append($('<td>').text(stats['ft_pct']));
 
                         var trh2 = $('<tr>');
                         var tr2 = $('<tr>');
                         trh2.append($('<th>').text('OREB')).append($('<th>').text('DREB')).append($('<th>').text('REB')).append($('<th>').text('AST')).append($('<th>').text('TO'))
-                            .append($('<th>').text('STL')).append($('<th>').text('BLK')).append($('<th>').text('PF')).append($('<th>').text('PPG')).append($('<th>'))
-                            .append($('<th>')).append($('<th>'));
+                            .append($('<th>').text('STL')).append($('<th>').text('BLK')).append($('<th>').text('PF')).append($('<th>').text('PPG'));
                         tr2.append($('<td>').text(stats['reb_off'])).append($('<td>').text(stats['reb_def'])).append($('<td>').text(stats['reb_off'])).append($('<td>').text(stats['misc_ast']))
                             .append($('<td>').text(stats['misc_to'])).append($('<td>').text(stats['misc_stl'])).append($('<td>').text(stats['misc_blk'])).append($('<td>').text(stats['misc_pf']))
-                            .append($('<td>').text(stats['misc_ppg'])).append($('<td>')).append($('<td>')).append($('<td>'));
+                            .append($('<td>').text(stats['misc_ppg']));
 
                         row2.append(table.append(trh1).append(tr1).append(trh2).append(tr2));
 
@@ -157,7 +163,9 @@ $(document).ready(function () {
                     var results = JSON.parse(data.d);
 
                     if (results.length == 0) {
-                        searchResults.html('No results found');
+                        if (!$('#player')) {
+                            searchResults.html('No search results found');
+                        }
                     } else {
                         //display the results
                         $.each(results, function (index, obj) {

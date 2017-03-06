@@ -101,6 +101,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="dashboard.css" />
+    <Content Include="nba-pic.jpg" />
     <Content Include="packages.config" />
     <Content Include="whale-search.png" />
     <Content Include="whale.png" />

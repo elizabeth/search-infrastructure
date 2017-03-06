@@ -138,6 +138,7 @@ namespace WorkerRole
 
                         crawler = new Crawler(robotQueue, urlQueue, pagesTable, statsTable, errorsTable);
                         stat = new StatEntity(cpuCounter.NextValue(), memCounter.NextValue());
+                        updateStatsTable(statsTable);
 
                         Thread.Sleep(40000);
                     }

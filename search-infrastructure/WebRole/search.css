@@ -20,15 +20,19 @@ img {
     width: 100%;
 }
 
-#submitDiv {
-    position: relative;
-    padding-top: 50px;
+#inputDiv {
+    width: 100%;
 }
 
-#submit {
+/*#submitDiv {
+    position: relative;
+    padding-top: 50px;
+}*/
+
+/*#submit {
     position: absolute;
     bottom: 0;
-}
+}*/
 
 /* Links inside the dropdown */
 .dropdown-content div {
@@ -62,6 +66,20 @@ ins {
 h3 {
     margin-top: 0;
     margin-bottom: 0;
+}
+
+.nba-picture {
+    height: 145px;
+    width: auto;
+    vertical-align: middle;
+}
+
+.info {
+    display: inline-block;
+}
+
+strong {
+    color: #ff4081;
 }
 
 table, th, td {
@@ -103,8 +121,8 @@ hr {
     border-top: 1px solid #eceeef;
 }
 
-@media(min-width: 840px) {
-    #submitDiv {
-        padding-top: 0;
-    }
+.adsbygoogle {
+    position: fixed;
+    bottom: 1em;
+    width: 100%;
 }

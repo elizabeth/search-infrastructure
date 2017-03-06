@@ -1,1 +1,2 @@
-#Write-up
+# Write-up
+This search infrastructure aims to tie together the previous INFO 344 assignments in order to create an search engine with search suggestions from wiki  shows NBA player stats and results from CNN and Bleacher Report.
