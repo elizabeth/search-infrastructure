@@ -167,7 +167,7 @@ $(document).ready(function () {
                     var results = JSON.parse(data.d);
 
                     if (results.length == 0) {
-                        if (!$('#player')) {
+                        if (!$('#player').length) {
                             searchResults.html('No search results found');
                         }
                     } else {

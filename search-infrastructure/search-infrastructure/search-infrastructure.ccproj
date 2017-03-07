@@ -66,6 +66,7 @@
   <ItemGroup>
     <PublishProfile Include="Profiles\elizacloudProduction.azurePubxml" />
     <PublishProfile Include="Profiles\elizacloudProduction1.azurePubxml" />
+    <PublishProfile Include="Profiles\elizacloudProduction2.azurePubxml" />
   </ItemGroup>
   <!-- Import the target files for this project template -->
   <PropertyGroup>
