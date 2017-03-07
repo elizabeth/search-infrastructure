@@ -12,12 +12,11 @@ namespace Elizabot
         public int count;
         public HashSet<string> queryWords;
 
-        public PagePair(PageEntity page, int count, string word)
+        public PagePair(PageEntity page, int count, HashSet<string> query)
         {
             this.page = page;
             this.count = count;
-            queryWords = new HashSet<string>();
-            queryWords.Add(word);
+            this.queryWords = query;
         }
     }
 }

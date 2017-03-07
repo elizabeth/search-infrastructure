@@ -64,6 +64,10 @@ h3 {
     vertical-align: middle;
 }
 
+#searchResults {
+    margin-bottom: 100px;
+}
+
 .info {
     display: inline-block;
 }

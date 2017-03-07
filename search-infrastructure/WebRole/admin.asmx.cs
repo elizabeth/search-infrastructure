@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
-using System.Web;
 using System.Web.Script.Serialization;
 using System.Web.Script.Services;
 using System.Web.Services;
@@ -113,10 +112,9 @@ namespace WebRole
                             if (results.ContainsKey(page.uri))
                             {
                                 results[page.uri].count += 1;
-                                results[page.uri].queryWords.Add(word);
                             } else
                             {
-                                results.Add(page.uri, new PagePair(page, 1, word));
+                                results.Add(page.uri, new PagePair(page, 1, new HashSet<string>(terms)));
                             }
                         }
                     }

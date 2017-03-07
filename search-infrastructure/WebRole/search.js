@@ -57,6 +57,10 @@ $(document).ready(function () {
                 try {
                     var results = JSON.parse(data.d);
 
+                    if (results.length == 0) {
+                        suggestions.remove();
+                    }
+
                     //display the results
                     $.each(results, function (key, bool) {
                         //set on click
@@ -178,7 +182,7 @@ $(document).ready(function () {
                             var descString = "<span class='date'>" + date.toDateString() + "</span> - ";
                             //var found = false;
                             for (var i = 0; i < split.length; i++) {
-                                var word = split[i].toLowerCase();
+                                var word = split[i];
                                 //$.each(obj.queryWords, function (wordIndex, queryWord) {
                                 //    if (word.includes(queryWord)) {
                                 //        console.log(queryWord);
@@ -193,8 +197,7 @@ $(document).ready(function () {
                                 //}
 
                                 //found = false;
-
-                                if (jQuery.inArray(word, obj.queryWords) != -1) {
+                                if (jQuery.inArray(word.toLowerCase(), obj.queryWords) != -1) {
                                     descString += " <strong>" + word + "</strong>";
                                 } else {
                                     descString += " " + word;

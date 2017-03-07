@@ -116,9 +116,6 @@ namespace Elizabot
                                     if (metaOgDescNode != null)
                                     {
                                         body = metaOgDescNode.GetAttributeValue("content", "");
-                                    } else
-                                    {
-
                                     }
                                 }
 
