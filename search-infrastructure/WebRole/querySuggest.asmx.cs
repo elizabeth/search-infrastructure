@@ -139,12 +139,14 @@ namespace WebRole
 
             try
             {
+                term = term.Trim().ToLower();
+
                 trie.saveSearch(term);
-                return new JavaScriptSerializer().Serialize("No search results found!");
+                return new JavaScriptSerializer().Serialize("Search saved!");
             }
-            catch
+            catch (Exception e)
             {
-                return new JavaScriptSerializer().Serialize("Error searching");
+                return new JavaScriptSerializer().Serialize("Error saving search");
             }
         }
 

@@ -127,7 +127,6 @@ namespace HybridTrie
             char letter;
             int index;
 
-
             foreach (var found in (searches.Where(s => s.Key.StartsWith(term))).ToList().OrderByDescending(key => key.Value))
             {
                 //make sure duplicate words are not added
@@ -168,11 +167,14 @@ namespace HybridTrie
                         temp = word + each;
                         if (temp.StartsWith(term))
                         {
-                            dict.Add(temp, false);
-
-                            if (dict.Count >= _maxList)
+                            if (!dict.ContainsKey(temp))
                             {
-                                return dict;
+                                dict.Add(temp, false);
+
+                                if (dict.Count >= _maxList)
+                                {
+                                    return dict;
+                                }
                             }
                         }
                     }
