@@ -75,11 +75,11 @@ $(document).ready(function () {
                     })
                 } catch (err) {
                     suggestions.remove();
-                    console.log('Error retrieving suggestions. ' + err);
+                    console.log('Error retrieving suggestions. ' + err.message);
                 }
             }).fail(function (err) {
                 $('#suggestions').remove();
-                console.log('Error retrieving suggestions. ' + err);
+                console.log('Error retrieving suggestions. ' + err.message);
             });
     }
 
@@ -210,11 +210,11 @@ $(document).ready(function () {
                     }
                 } catch (err) {
                     searchResults.text('Error retrieving search results.');
-                    console.log('Error retrieving search results. ' + err);
+                    console.log('Error retrieving search results. ' + err.message);
                 }
             }).fail(function (err) {
                 searchResults.text('Error retrieving search results.');
-                console.log('Error retrieving search results. ' + err);
+                console.log('Error retrieving search results. ' + err.message);
             });
     }
 
@@ -228,7 +228,7 @@ $(document).ready(function () {
             dataType: 'json'
         })
             .fail(function (err) {
-                console.log('Error saving user search. ' + err);
+                console.log('Error saving user search. ' + err.message);
             });
     }
 
